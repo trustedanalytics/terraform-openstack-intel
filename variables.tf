@@ -15,9 +15,7 @@ variable "network" {
 	default = "192.168"
 }
 
-variable "cf_admin_pass" {
-  default = "c1oudc0wc1oudc0w"
-}
+variable "cf_admin_pass" {}
 
 variable "debug" {
   default = "false"

@@ -92,21 +92,16 @@ cd $HOME
 
 # Setup proxy
 if [[ $HTTP_PROXY != "" || $HTTPS_PROXY != "" ]]; then
-  if [[ ! -f /etc/profile.d/http_proxy.sh ]]; then
-    cat <<EOF > http_proxy.sh
-#!/bin/bash
-export http_proxy=${HTTP_PROXY}
-export https_proxy=${HTTPS_PROXY}
-export no_proxy=${NO_PROXY}
-EOF
-  sudo cp http_proxy.sh /etc/profile.d/http_proxy.sh
-  source http_proxy.sh
-  echo "Acquire::http::proxy \"${HTTP_PROXY}\";" > 100proxy
-  echo "Acquire::https::proxy \"${HTTPS_PROXY}\";" >> 100proxy
-  sudo cp 100proxy /etc/apt/apt.conf.d/100proxy
-  fi
-fi
+  echo '#!/bin/sh' | sudo tee /etc/profile.d/proxy.sh
+  echo "export http_proxy=${HTTP_PROXY}" | sudo tee -a /etc/profile.d/proxy.sh
+  echo "export https_proxy=${HTTPS_PROXY}" | sudo tee -a /etc/profile.d/proxy.sh
+  echo "export no_proxy=${NO_PROXY}" | sudo tee -a /etc/profile.d/proxy.sh
+  sudo chmod +x /etc/profile.d/proxy.sh
+  source /etc/profile.d/proxy.sh
 
+  echo "Acquire::http::Proxy \"${HTTP_PROXY}\";" | sudo tee /etc/apt/apt.conf.d/01proxy
+  echo "Acquire::https::Proxy \"${HTTPS_PROXY}\";" | sudo tee -a /etc/apt/apt.conf.d/01proxy
+fi
 
 # Generate the key that will be used to ssh between the bastion and the
 # microbosh machine
@@ -126,7 +121,7 @@ case "${release}" in
       libpq-dev libmysqlclient-dev libsqlite3-dev \
       g++ gcc make libc6-dev libreadline6-dev zlib1g-dev libssl-dev libyaml-dev \
       libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake \
-      libtool bison pkg-config libffi-dev cmake
+      libtool bison pkg-config libffi-dev cmake libcurl4-openssl-dev
     ;;
   (*Centos*|*RedHat*|*Amazon*)
     sudo yum update -y
@@ -241,7 +236,7 @@ popd
 # may change in the future if we come up with a better way to handle maintaining
 # configs in a git repo
 if [[ ! -d "$HOME/workspace/deployments/cf-boshworkspace" ]]; then
-  git clone --branch  ${CF_BOSHWORKSPACE_VERSION} http://github.com/cloudfoundry-community/cf-boshworkspace
+  git clone --branch  ${CF_BOSHWORKSPACE_VERSION} http://github.com/trustedanalytics/cf-boshworkspace
 fi
 pushd cf-boshworkspace
 mkdir -p ssh
@@ -260,7 +255,7 @@ fi
 
 echo "Install Traveling CF"
 if [[ "$(cat $HOME/.bashrc | grep 'export PATH=$PATH:$HOME/bin/traveling-cf-admin')" == "" ]]; then
-  curl -s https://raw.githubusercontent.com/cloudfoundry-community/traveling-cf-admin/master/scripts/installer | bash
+  curl -s https://raw.githubusercontent.com/trustedanalytics/traveling-cf-admin/master/scripts/installer | bash
   echo 'export PATH=$PATH:$HOME/bin/traveling-cf-admin' >> $HOME/.bashrc
   source $HOME/.bashrc
 fi
@@ -352,8 +347,9 @@ EOF
     fi
 fi
 
-
-bosh upload release --skip-if-exists https://bosh.io/d/github.com/cloudfoundry/cf-release?v=${CF_RELEASE_VERSION}
+RELEASE=~/cf-release-${CF_RELEASE_VERSION}.tgz
+test -e ${RELEASE} || wget -O ${RELEASE} https://bosh.io/d/github.com/cloudfoundry/cf-release?v=${CF_RELEASE_VERSION}
+bosh upload release --skip-if-exists ${RELEASE}
 bosh deployment cf-openstack-${CF_SIZE}
 bosh prepare deployment || bosh prepare deployment  #Seems to always fail on the first run...
 
@@ -387,7 +383,7 @@ if [[ $INSTALL_DOCKER == "true" ]]; then
 
   cd ~/workspace/deployments
   if [[ ! -d "$HOME/workspace/deployments/docker-services-boshworkspace" ]]; then
-    git clone  --branch ${DOCKER_BOSHWORKSPACE_VERSION} https://github.com/cloudfoundry-community/docker-services-boshworkspace.git
+    git clone  --branch ${DOCKER_BOSHWORKSPACE_VERSION} https://github.com/trustedanalytics/docker-services-boshworkspace.git
   fi
 
   echo "Update the docker-aws-vpc.yml with cf-boshworkspace parameters"
@@ -424,7 +420,7 @@ if [[ $INSTALL_LOGSEARCH == "true" ]]; then
 
     cd ~/workspace/deployments
     if [[ ! -d "$HOME/workspace/deployments/logsearch-boshworkspace" ]]; then
-        git clone https://github.com/cloudfoundry-community/logsearch-boshworkspace.git
+        git clone https://github.com/trustedanalytics/logsearch-boshworkspace.git
     fi
 
     cd logsearch-boshworkspace
