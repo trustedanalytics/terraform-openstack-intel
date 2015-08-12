@@ -1,0 +1,16 @@
+auth_url="http://10.2.95.100:5000/v2.0"
+tenant_name="admin"
+tenant_id="admin"
+username="admin"
+password="admin"
+cdh_key_path="keys/cdh"
+cdh_public_key_path="keys/cdh.pub"
+jumpbox_public_key_path="keys/jumpbox.pub"
+jumpbox_key_path="keys/cdh"
+floating_ip_pool="net04_ext"
+region="RegionOne"
+worker_size=4
+master_size=3
+ansible_repo_path=""
+cf_sg_id=""
+router_id=""
