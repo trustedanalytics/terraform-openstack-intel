@@ -1,0 +1,71 @@
+auth_url="http://10.2.95.100:5000/v2.0"
+tenant_name="admin"
+tenant_id="admin"
+username="admin"
+password="admin"
+jumpbox_public_key_path="keys/jumpbox.pub"
+jumpbox_key_path="keys/jumpbox"
+cdh_key_path="keys/cdh"
+cdh_public_key_path="keys/cdh.pub"
+floating_ip_pool="net04_ext"
+network_external_id="xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx"
+region="RegionOne"
+worker_size=4
+master_size=3
+ansible_repo_path=""
+ubuntu_image_name="ubuntu14.04" #changes with every deploy
+centos_image_name="centos6.6" # changes with every deploy
+
+# Control the version of CF to be deployed
+#cf_release_version="207"
+
+# Control the version of the CF boshworkspace
+#cf_boshworkspace_version="v1.1.9"
+
+# Control the version of docker-services-boshworkspace
+#docker_boshworkspace_version="master"
+
+# Control the domain for base CF:
+#cf_domain="XIP" # Use "XIP" for an xip.io based domain, or provide your own domain here
+
+# Prevent Host Header spoofing from hitting internal APIs:
+#private_cf_domains="my.internal"
+
+# Control the cloudfoundry deployment size
+# Values are 'small', 'med', 'med-ha', and 'big-ha'
+# See https://github.com/cloudfoundry-community/terraform-aws-cf-install/blob/master/variables.tf for how
+# those sizes inform instance counts
+#deployment_size="small"
+
+#Change CloudFoundry's admin password:
+#cf_admin_pass="mysupersecretpassword"
+
+# Should I install docker?
+#install_docker_services="true"
+
+# Should I install logsearch?
+#install_logsearch="false"
+
+# What resource pools/instance sizes should each job use? 'large', 'medium', 'small', 'runner'
+#backbone_resource_pool = "large"
+#data_resource_pool = "large"
+#public_haproxy_resource_pool = "small"
+#private_haproxy_resource_pool = "small"
+#api_resource_pool = "medium"
+#services_resource_pool = "medium"
+#health_resource_pool = "medium"
+#runner_resource_pool = "runner"
+
+# Am I behind an HTTP/HTTPS proxy?
+#http_proxy=URL to your proxy
+#https_proxy=URL to your proxy
+
+# What DNS servers should we use on our servers?
+#dns1=8.8.4.4
+#dns2=8.8.8.8
+
+# How long should we wait before timing out on openstack VM creation/deletion? (seconds)
+#os_timeout=1200
+
+# Should we use offline buildpack for java?
+#offline_java_buildpack="true"
