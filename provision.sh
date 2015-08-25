@@ -201,6 +201,12 @@ proxy:
 EOF
 fi
 
+if [[ $NTP_SERVERS != "" ]]; then
+    cat <<EOF >> settings.yml
+ntp: ${NTP_SERVERS}
+EOF
+fi
+
 if [[ ! -d "$HOME/workspace/deployments/microbosh/deployments" ]]; then
   bosh bootstrap deploy
 fi
@@ -373,9 +379,10 @@ fi
 
 
 # Keep trying until there is a successful BOSH deploy.
-for i in {0..2}
-do bosh -n deploy
-done
+# for i in {0..2}
+#do bosh -n deploy
+#done
+bosh -n deploy
 
 # Run smoke tests
 # FIXME: Re-enable smoke tests after they become reliable (experiencing intermittent failures)
