@@ -122,4 +122,4 @@ do
   ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/yum.conf /etc/yum.conf
 done
 
-exec bash run_ansible.sh
+exec bash bin/run_ansible.sh
