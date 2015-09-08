@@ -1,53 +1,39 @@
-auth_url="http://10.2.95.100:5000/v2.0"
-tenant_name="admin"
-tenant_id="admin"
-username="admin"
-password="admin"
-jumpbox_public_key_path="keys/jumpbox.pub"
-jumpbox_key_path="keys/jumpbox"
-cdh_key_path="keys/cdh"
-cdh_public_key_path="keys/cdh.pub"
-floating_ip_pool="net04_ext"
-network_external_id="xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx"
+# Important OpenStack and global  vars
+
+auth_url="{ip of API}" # Example: auth_url="http://10.2.95.100:5000/v2.0"
+tenant_name="{name of your project}"
+tenant_id="{id of your project – from step 1}"
+username="{account you created with members privileges}"
+password="{password to account}"
+jumpbox_public_key_path="{public jumpbox key}"
+jumpbox_key_path="{public jumpbox key}"
+cdh_key_path="{public jumpbox key}"
+cdh_public_key_path="{public jumpbox key}"
+floating_ip_pool="{name of network}"
+network_external_id="{id of network}"
+ansible_repo_path="{path to terraform-openstack-intel}" # i.e. $HOME/openstack/terraform-openstack-intel/
+cf_admin_pass="mysupersecretpassword"
+
+# Default settings, change if needed
+
 region="RegionOne"
-worker_size=4
-master_size=3
-ansible_repo_path=""
-ubuntu_image_name="ubuntu14.04" #changes with every deploy
-centos_image_name="centos6.6" # changes with every deploy
+ubuntu_image_name="ubuntu-trusty" 
+centos_image_name="centos-6" 
 
-# Control the version of CF to be deployed
-#cf_release_version="207"
+http_proxy="{set proxy}" # comment if not needed
+https_proxy="{set proxy}" # comment if not needed
+dns1="{dns server}" # comment if not needed
+dns2=”{dns server}" # comment if not needed
 
-# Control the version of the CF boshworkspace
-#cf_boshworkspace_version="v1.1.9"
+# How long should we wait before timing out on openstack VM creation/deletion? (seconds)
+#os_timeout=1200
 
-# Control the version of docker-services-boshworkspace
-#docker_boshworkspace_version="master"
-
-# Control the domain for base CF:
-#cf_domain="XIP" # Use "XIP" for an xip.io based domain, or provide your own domain here
-
-# Prevent Host Header spoofing from hitting internal APIs:
-#private_cf_domains="my.internal"
-
-# Control the cloudfoundry deployment size
-# Values are 'small', 'med', 'med-ha', and 'big-ha'
-# See https://github.com/cloudfoundry-community/terraform-aws-cf-install/blob/master/variables.tf for how
-# those sizes inform instance counts
-#deployment_size="small"
-
-#Change CloudFoundry's admin password:
-#cf_admin_pass="mysupersecretpassword"
-
-# Should I install docker?
-#install_docker_services="true"
-
-# Should I install logsearch?
-#install_logsearch="false"
+# Should we use offline buildpack for java?
+#offline_java_buildpack="true"
 
 # What resource pools/instance sizes should each job use? 'large', 'medium', 'small', 'runner'
 #backbone_resource_pool = "large"
+
 #data_resource_pool = "large"
 #public_haproxy_resource_pool = "small"
 #private_haproxy_resource_pool = "small"
@@ -55,17 +41,29 @@ centos_image_name="centos6.6" # changes with every deploy
 #services_resource_pool = "medium"
 #health_resource_pool = "medium"
 #runner_resource_pool = "runner"
+worker_size=3 # set worker size you want to have for cloudera
+master_size=3 # set master size you want to have for cloudera
 
-# Am I behind an HTTP/HTTPS proxy?
-#http_proxy=URL to your proxy
-#https_proxy=URL to your proxy
+# Control the cloudfoundry deployment size
+# Values are 'small', 'med', 'med-ha', and 'big-ha'
+# See https://github.com/cloudfoundry-community/terraform-aws-cf-install/blob/master/variables.tf for how
+# those sizes inform instance counts
+deployment_size="small"
 
-# What DNS servers should we use on our servers?
-#dns1=8.8.4.4
-#dns2=8.8.8.8
+# Should I install docker?
+#install_docker_services="true"
 
-# How long should we wait before timing out on openstack VM creation/deletion? (seconds)
-#os_timeout=1200
+# Should I install logsearch?
+#install_logsearch="false"
 
-# Should we use offline buildpack for java?
-#offline_java_buildpack="true"
+# Control the domain for base CF:
+#cf_domain="XIP" # Use "XIP" for an xip.io based domain, or provide your own domain here
+
+# Prevent Host Header spoofing from hitting internal APIs:
+#private_cf_domains="my.internal"
+
+# Do not change, expert mode required
+
+cf_release_version="211" #211 is currently the only supported version
+cf_boshworkspace_version="master" #we need to take the head of the repository because of needed fixes
+docker_boshworkspace_version="master"
