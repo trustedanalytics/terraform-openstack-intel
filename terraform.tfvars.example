@@ -11,7 +11,7 @@ cdh_key_path="{public jumpbox key}"
 cdh_public_key_path="{public jumpbox key}"
 floating_ip_pool="{name of network}"
 network_external_id="{id of network}"
-ansible_repo_path="{path to terraform-openstack-intel}" # i.e. $HOME/openstack/terraform-openstack-intel/
+ansible_repo_path="."
 cf_admin_pass="mysupersecretpassword"
 
 # Default settings, change if needed
