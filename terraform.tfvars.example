@@ -10,7 +10,7 @@ jumpbox_key_path="{path to private jumpbox key}"
 cdh_key_path="{path to private cdh key}"
 cdh_public_key_path="{path to public cdh key}"
 floating_ip_pool="{name of network}"
-network_external_id="{id of network}"
+network_external_id="net04_ext"
 ansible_repo_path="."
 cf_admin_pass="mysupersecretpassword"
 
