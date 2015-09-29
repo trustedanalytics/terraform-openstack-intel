@@ -98,10 +98,10 @@ variable health_z1_count {
 }
 variable runner_z1_count {
     default = {
-        small  = "1"
-        med    = "2"
-        med-ha = "1"
-        big-ha = "3"
+        small  = "4"
+        med    = "8"
+        med-ha = "4"
+        big-ha = "10"
     }
 }
 
@@ -109,8 +109,8 @@ variable backbone_z2_count {
     default = {
         small  = "0"
         med    = "0"
-        med-ha = "1"
-        big-ha = "2"
+        med-ha = "4"
+        big-ha = "10"
     }
 }
 variable api_z2_count {
