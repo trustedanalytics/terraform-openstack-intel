@@ -54,7 +54,7 @@ deployment_size="small"
 #install_docker_services="true"
 
 # Should I install logsearch?
-#install_logsearch="false"
+install_logsearch="false"
 
 # Control the domain for base CF:
 #cf_domain="XIP" # Use "XIP" for an xip.io based domain, or provide your own domain here
