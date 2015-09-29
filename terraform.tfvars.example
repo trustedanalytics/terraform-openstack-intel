@@ -18,7 +18,7 @@ cf_admin_pass="mysupersecretpassword"
 
 region="RegionOne"
 ubuntu_image_name="ubuntu-trusty" 
-centos_image_name="centos-6" 
+centos_image_name="centos-6-official" 
 
 http_proxy="{set proxy}" # comment if not needed
 https_proxy="{set proxy}" # comment if not needed
