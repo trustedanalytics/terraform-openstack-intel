@@ -23,7 +23,7 @@ centos_image_name="centos-6"
 http_proxy="{set proxy}" # comment if not needed
 https_proxy="{set proxy}" # comment if not needed
 dns1="{dns server}" # comment if not needed
-dns2=”{dns server}" # comment if not needed
+dns2="{dns server}" # comment if not needed
 
 # How long should we wait before timing out on openstack VM creation/deletion? (seconds)
 #os_timeout=1200
