@@ -62,7 +62,11 @@ managerIP=${1}
 managerHost="cdh-manager"
 echo "[cdh-manager]" >> $FILE
 echo "${managerHost}${prefix} ansible_ssh_host=${managerIP}" >> $FILE
-add_to_etc_hosts ${managerIP} ${managerHost}
+
+if [[ $useCustomDns == 'true' ]]; then
+  add_to_etc_hosts ${managerIP} ${managerHost}
+fi
+
 machineIPs+=($managerIP)
 
 
@@ -74,7 +78,11 @@ do
   masterIP=${master}
   masterHost="cdh-master-"${masterCount}
   echo "${masterHost}${prefix} ansible_ssh_host=${masterIP}" >> $FILE
-  add_to_etc_hosts ${masterIP} ${masterHost}
+
+  if [[ $useCustomDns == 'true' ]]; then
+    add_to_etc_hosts ${masterIP} ${masterHost}
+  fi
+
   machineIPs+=($masterIP)
   masterCount=$((masterCount + 1))
 done
@@ -87,7 +95,11 @@ do
   workerIP=${worker}
   workerHost="cdh-worker-"${workerCount}
   echo "${workerHost}${prefix} ansible_ssh_host=${workerIP}" >> $FILE
-  add_to_etc_hosts ${workerIP} ${workerHost}
+
+  if [[ $useCustomDns == 'true' ]]; then
+    add_to_etc_hosts ${workerIP} ${workerHost}
+  fi
+
   machineIPs+=($workerIP)
   workerCount=$((workerCount + 1))
 done
@@ -104,22 +116,32 @@ do
   consulMasterIP=${master}
   consulMasterHost="consul-master-${consulMasterCount}"
   echo "${consulMasterHost}${prefix} ansible_ssh_host=${consulMasterIP}" >> $FILE
-  add_to_etc_hosts ${consulMasterIP} ${consulMasterHost}
+
+  if [[ $useCustomDns == 'true' ]]; then
+    add_to_etc_hosts ${consulMasterIP} ${consulMasterHost}
+  fi
+
   machineIPs+=($consulMasterIP)
   consulMasterCount=$((consulMasterCount + 1))
 done
 
 popd
 
-cp /etc/hosts hosts
+if [[ $useCustomDns == 'true' ]]; then
+  cp /etc/hosts hosts
+fi
+
 for machineIP in ${machineIPs[@]}
 do
-  scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no hosts centos@${machineIP}:/home/centos/hosts
   scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no /etc/profile.d/proxy.sh centos@${machineIP}:/home/centos/proxy.sh
   scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no /etc/yum.conf centos@${machineIP}:/home/centos/yum.conf
-  ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/hosts /etc/hosts
   ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/proxy.sh /etc/profile.d/proxy.sh
   ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/yum.conf /etc/yum.conf
+
+  if [[ $useCustomDns == 'true' ]]; then
+    scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no hosts centos@${machineIP}:/home/centos/hosts
+    ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/hosts /etc/hosts
+  fi
 done
 
 exec bash bin/run_ansible.sh
