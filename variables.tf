@@ -13,14 +13,8 @@
 # limitations under the License.
 #
 
-variable "dns1" {
-  default = "8.8.8.8"
-}
-
-variable "dns2" {
-  default = "8.8.4.4"
-}
-
+variable "dns1" {}
+variable "dns2" {}
 variable "auth_url" {}
 variable "tenant_name" {}
 variable "tenant_id" {}
