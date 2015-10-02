@@ -98,12 +98,9 @@ variable "private_cf_domains" {
   default = ""
 }
 
-variable "dns1" {
-  default = "8.8.4.4"
-}
-variable "dns2" {
-  default = "8.8.8.8"
-}
+variable "dns1" {}
+variable "dns2" {}
+
 variable install_logsearch {
     default = "true"
 }
@@ -118,7 +115,6 @@ variable "health_resource_pool"          { default = "medium" }
 variable "runner_resource_pool"          { default = "runner" }
 
 variable "debug" { default = "false" }
-
 variable "os_timeout" { default = "1200" }
 
 variable "debug" {
