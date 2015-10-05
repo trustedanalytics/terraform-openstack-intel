@@ -24,19 +24,21 @@ echo "$*"
 cdhManager=$1
 cdhMasterArray=$2
 cdhWorkerArray=$3
-httpProxy=$4
-httpsProxy=$5
-consulMasterArray=$6
+consulMasterArray=$4
+httpProxy=$5
+httpsProxy=$6
 
 declare -a machineIPs
 
-echo "#!/bin/sh" | sudo tee /etc/profile.d/proxy.sh
-echo "export http_proxy=${httpProxy}" | sudo tee -a /etc/profile.d/proxy.sh
-echo "export https_proxy=${httpsProxy}" | sudo tee -a /etc/profile.d/proxy.sh
-sudo chmod +x /etc/profile.d/proxy.sh
-source /etc/profile.d/proxy.sh
+if [[ -n "${httpProxy}" && -n "${httpsProxy}" ]]; then
+  echo "#!/bin/sh" | sudo tee /etc/profile.d/proxy.sh
+  echo "export http_proxy=${httpProxy}" | sudo tee -a /etc/profile.d/proxy.sh
+  echo "export https_proxy=${httpsProxy}" | sudo tee -a /etc/profile.d/proxy.sh
+  sudo chmod +x /etc/profile.d/proxy.sh
+  source /etc/profile.d/proxy.sh
 
-echo "proxy=${httpProxy}" | sudo tee -a /etc/yum.conf
+  echo "proxy=${httpProxy}" | sudo tee -a /etc/yum.conf
+fi
 
 sudo yum install ansible tmux vim -y
 chmod 600 $HOME/.ssh/id_rsa
@@ -133,10 +135,12 @@ fi
 
 for machineIP in ${machineIPs[@]}
 do
-  scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no /etc/profile.d/proxy.sh centos@${machineIP}:/home/centos/proxy.sh
-  scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no /etc/yum.conf centos@${machineIP}:/home/centos/yum.conf
-  ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/proxy.sh /etc/profile.d/proxy.sh
-  ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/yum.conf /etc/yum.conf
+  if [[ -n "${httpProxy}" && -n "${httpsProxy}" ]]; then
+    scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no /etc/profile.d/proxy.sh centos@${machineIP}:/home/centos/proxy.sh
+    scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no /etc/yum.conf centos@${machineIP}:/home/centos/yum.conf
+    ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/proxy.sh /etc/profile.d/proxy.sh
+    ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/yum.conf /etc/yum.conf
+  fi
 
   if [[ $useCustomDns == 'true' ]]; then
     scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no hosts centos@${machineIP}:/home/centos/hosts

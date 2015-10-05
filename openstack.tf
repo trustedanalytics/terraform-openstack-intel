@@ -267,7 +267,7 @@ resource "openstack_compute_instance_v2" "cdh-launcher" {
   provisioner "remote-exec" {
     inline = [
         "chmod +x /home/centos/provision.sh",
-        "/home/centos/provision.sh ${openstack_compute_instance_v2.cdh-manager.access_ip_v4} ${join(",", openstack_compute_instance_v2.cdh-master.*.access_ip_v4)} ${join(",", openstack_compute_instance_v2.cdh-worker.*.access_ip_v4)} ${var.http_proxy} ${var.https_proxy} ${module.consul.consul_masters}"
+        "/home/centos/provision.sh ${openstack_compute_instance_v2.cdh-manager.access_ip_v4} ${join(",", openstack_compute_instance_v2.cdh-master.*.access_ip_v4)} ${join(",", openstack_compute_instance_v2.cdh-worker.*.access_ip_v4)} ${module.consul.consul_masters} ${var.http_proxy} ${var.https_proxy}"
     ]
   }
 }
