@@ -275,3 +275,7 @@ resource "openstack_compute_instance_v2" "cdh-launcher" {
 output "cdh_cidr" {
   value = "${openstack_networking_subnet_v2.cdh-subnet.cidr}"
 }
+
+output "consul_masters" {
+  value = "${module.consul.consul_masters}"
+}
