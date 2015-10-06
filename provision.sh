@@ -52,6 +52,8 @@ OS_TIMEOUT=${26}
 
 OFFLINE_JAVA_BUILDPACK=${27}
 
+CONSUL_MASTERS=${28}
+
 DOCKER_BOSHWORKSPACE_VERSION=master
 
 BACKBONE_Z1_COUNT=COUNT
@@ -302,6 +304,9 @@ fi
   -e "s/services:\( \+\)[a-z\-\_A-Z0-1]\+\(.*# MARKER_FOR_POOL_PROVISION.*\)/services:\1${SERVICES_POOL}\2/" \
   -e "s/health:\( \+\)[a-z\-\_A-Z0-1]\+\(.*# MARKER_FOR_POOL_PROVISION.*\)/health:\1${HEALTH_POOL}\2/" \
   -e "s/runner:\( \+\)[a-z\-\_A-Z0-1]\+\(.*# MARKER_FOR_POOL_PROVISION.*\)/runner:\1${RUNNER_POOL}\2/" \
+  -e "s|\(dns:\).*|\1 [${CONSUL_MASTERS}]|" \
+  -e "/8.8.8.8/d" \
+  -e "/8.8.4.4/d" \
   deployments/cf-openstack-${CF_SIZE}.yml
 
 if [[ $OFFLINE_JAVA_BUILDPACK == "true" ]]; then
@@ -392,7 +397,9 @@ if [[ $INSTALL_DOCKER == "true" ]]; then
   /bin/sed -i \
     -e "s/SUBNET_ID/${DOCKER_SUBNET}/g" \
     -e "s/DOCKER_SG/${CF_SG}/g" \
-    -e "s|dns_servers: \+\[.*\]|dns_servers: [\"${DNS1}\", \"${DNS2}\"]|" \
+    -e "s|\(dns_servers:\).*|\1 [${DNS1},${DNS2}]|" \
+    -e "/8.8.8.8/d" \
+    -e "/8.8.4.4/d" \
     "${dockerDeploymentManifest}"
 
   if [[ -n ${HTTP_PROXY} || -n ${HTTPS_PROXY} ]]; then
