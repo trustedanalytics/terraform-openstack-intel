@@ -232,3 +232,7 @@ output "os_timeout" {
 output "offline_java_buildpack" {
   value = "${module.cf-install.offline_java_buildpack}"
 }
+
+output "consul_masters" {
+  value = "${module.cloudera.consul_masters}"
+}
