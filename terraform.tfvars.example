@@ -13,6 +13,7 @@ floating_ip_pool="{name of network}"
 network_external_id="net04_ext"
 ansible_repo_path="."
 cf_admin_pass="mysupersecretpassword"
+ntp_servers="0.pool.ntp.org,1.pool.ntp.org"
 
 # Default settings, change if needed
 

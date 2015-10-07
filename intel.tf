@@ -60,6 +60,7 @@ module "cf-install" {
   os_timeout                    = "${var.os_timeout}"
   additional_cf_sg_allow_1="${module.cloudera.cdh_cidr}"
   offline_java_buildpack = "${var.offline_java_buildpack}"
+  ntp_servers = "${var.ntp_servers}"
 }
 
 module "cloudera" {
