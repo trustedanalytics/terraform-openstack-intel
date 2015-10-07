@@ -25,6 +25,8 @@ cdhManager=$1
 cdhMasterArray=$2
 cdhWorkerArray=$3
 consulMasterArray=$4
+
+# These variables must be defined at the end
 httpProxy=$5
 httpsProxy=$6
 
