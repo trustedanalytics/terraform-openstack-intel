@@ -65,7 +65,7 @@ managerHost="cdh-manager"
 echo "[cdh-manager]" >> $FILE
 echo "${managerHost}${prefix} ansible_ssh_host=${managerIP}" >> $FILE
 
-if [[ $useCustomDns == 'true' ]]; then
+if [[ $useCustomDns == 'false' ]]; then
   add_to_etc_hosts ${managerIP} ${managerHost}
 fi
 
@@ -81,7 +81,7 @@ do
   masterHost="cdh-master-"${masterCount}
   echo "${masterHost}${prefix} ansible_ssh_host=${masterIP}" >> $FILE
 
-  if [[ $useCustomDns == 'true' ]]; then
+  if [[ $useCustomDns == 'false' ]]; then
     add_to_etc_hosts ${masterIP} ${masterHost}
   fi
 
@@ -98,7 +98,7 @@ do
   workerHost="cdh-worker-"${workerCount}
   echo "${workerHost}${prefix} ansible_ssh_host=${workerIP}" >> $FILE
 
-  if [[ $useCustomDns == 'true' ]]; then
+  if [[ $useCustomDns == 'false' ]]; then
     add_to_etc_hosts ${workerIP} ${workerHost}
   fi
 
@@ -119,7 +119,7 @@ do
   consulMasterHost="consul-master-${consulMasterCount}"
   echo "${consulMasterHost}${prefix} ansible_ssh_host=${consulMasterIP}" >> $FILE
 
-  if [[ $useCustomDns == 'true' ]]; then
+  if [[ $useCustomDns == 'false' ]]; then
     add_to_etc_hosts ${consulMasterIP} ${consulMasterHost}
   fi
 
@@ -129,7 +129,7 @@ done
 
 popd
 
-if [[ $useCustomDns == 'true' ]]; then
+if [[ $useCustomDns == 'false' ]]; then
   cp /etc/hosts hosts
 fi
 
@@ -142,7 +142,7 @@ do
     ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/yum.conf /etc/yum.conf
   fi
 
-  if [[ $useCustomDns == 'true' ]]; then
+  if [[ $useCustomDns == 'false' ]]; then
     scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no hosts centos@${machineIP}:/home/centos/hosts
     ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/hosts /etc/hosts
   fi
