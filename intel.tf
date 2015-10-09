@@ -238,6 +238,10 @@ output "consul_masters" {
   value = "${module.cloudera.consul_masters}"
 }
 
+output "cf_admin_pass" {
+  value = "${var.cf_admin_pass}"
+}
+
 output "cf_client_pass" {
   value = "${var.cf_client_pass}"
 }
