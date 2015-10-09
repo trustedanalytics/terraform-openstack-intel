@@ -247,3 +247,7 @@ output "cf_admin_pass" {
 output "cf_client_pass" {
   value = "${var.cf_client_pass}"
 }
+
+output "ntp_servers" {
+  value = "${var.ntp_servers}"
+}
