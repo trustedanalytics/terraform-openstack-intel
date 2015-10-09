@@ -7,6 +7,7 @@ variable "key_path" {}
 variable "public_key_path" {}
 variable "floating_ip_pool" {}
 variable "network_external_id" {}
+
 variable "region" {
   default = "RegionOne"
 }
@@ -183,3 +184,7 @@ variable "health_resource_pool"          { default = "medium" }
 variable "runner_resource_pool"          { default = "runner" }
 
 variable "offline_java_buildpack" { default = "false" }
+
+variable "ntp_servers" {
+  default = "0.pool.ntp.org,1.pool.ntp.org"
+}

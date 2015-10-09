@@ -57,6 +57,8 @@ CONSUL_MASTERS=${28}
 CF_ADMIN_PASS=${29}
 CF_CLIENT_PASS=${30}
 
+NTP_SERVERS=${31}
+
 DOCKER_BOSHWORKSPACE_VERSION=master
 
 BACKBONE_Z1_COUNT=COUNT
@@ -126,7 +128,7 @@ case "${release}" in
       libpq-dev libmysqlclient-dev libsqlite3-dev \
       g++ gcc make libc6-dev libreadline6-dev zlib1g-dev libssl-dev libyaml-dev \
       libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake \
-      libtool bison pkg-config libffi-dev cmake libcurl4-openssl-dev
+      libtool bison pkg-config libffi-dev cmake libcurl4-openssl-dev ntp
     ;;
   (*Centos*|*RedHat*|*Amazon*)
     sudo yum update -y
@@ -138,6 +140,16 @@ case "${release}" in
     yajl-ruby
     ;;
 esac
+
+sudo sed -i -e '/^server/d' /etc/ntp.conf
+
+ntp_servers=$(echo $NTP_SERVERS | tr ',' "\n")
+
+for ntp_server in $ntp_servers; do
+  echo "server ${ntp_server}" | sudo tee -a /etc/ntp.conf
+done
+
+sudo service ntp restart
 
 cd $HOME
 

@@ -74,6 +74,7 @@ assure_string_in_file $filename_provision 'OFFLINE_JAVA_BUILDPACK=${27}' "OFFLIN
 assure_string_in_file $filename_provision 'CONSUL_MASTERS=${28}' "CONSUL_MASTERS=\"$(terraform output -state="${state_file}" consul_masters)\""
 assure_string_in_file $filename_provision 'CF_ADMIN_PASS=${29}' "CF_ADMIN_PASS=\"$(terraform output -state="${state_file}" cf_admin_pass)\""
 assure_string_in_file $filename_provision 'CF_CLIENT_PASS=${30}' "CF_CLIENT_PASS=\"$(terraform output -state="${state_file}" cf_client_pass)\""
+assure_string_in_file $filename_provision 'NTP_SERVERS=${31}' "NTP_SERVERS=\"$(terraform output -state="${state_file}" ntp_servers)\""
 
 for job in BACKBONE API SERVICES HEALTH RUNNER; do
 	for zone in Z1 Z2; do
