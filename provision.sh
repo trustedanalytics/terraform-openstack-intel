@@ -54,6 +54,8 @@ OFFLINE_JAVA_BUILDPACK=${27}
 
 CONSUL_MASTERS=${28}
 
+CF_ADMIN_PASS=${29}
+
 DOCKER_BOSHWORKSPACE_VERSION=master
 
 BACKBONE_Z1_COUNT=COUNT
@@ -307,6 +309,7 @@ fi
   -e "s|\(dns:\).*|\1 [${CONSUL_MASTERS}]|" \
   -e "/8.8.8.8/d" \
   -e "/8.8.4.4/d" \
+  -e "s/CF_ADMIN_PASS/${CF_ADMIN_PASS}/g" \
   deployments/cf-openstack-${CF_SIZE}.yml
 
 if [[ $OFFLINE_JAVA_BUILDPACK == "true" ]]; then
