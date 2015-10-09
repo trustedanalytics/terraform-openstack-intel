@@ -55,6 +55,7 @@ OFFLINE_JAVA_BUILDPACK=${27}
 CONSUL_MASTERS=${28}
 
 CF_ADMIN_PASS=${29}
+CF_ADMIN_PASS=${30}
 
 DOCKER_BOSHWORKSPACE_VERSION=master
 
@@ -310,6 +311,7 @@ fi
   -e "/8.8.8.8/d" \
   -e "/8.8.4.4/d" \
   -e "s/CF_ADMIN_PASS/${CF_ADMIN_PASS}/g" \
+  -e "s/CF_CLIENT_PASS/${CF_CLIENT_PASS}/g" \
   deployments/cf-openstack-${CF_SIZE}.yml
 
 if [[ $OFFLINE_JAVA_BUILDPACK == "true" ]]; then
@@ -440,6 +442,7 @@ if [[ $INSTALL_LOGSEARCH == "true" ]]; then
              -e "s/IPMASK/${IPMASK}/g" \
              -e "s/CF_DOMAIN/run.${CF_DOMAIN}/g" \
              -e "s/CF_ADMIN_PASS/${CF_ADMIN_PASS}/g" \
+             -e "s/CF_CLIENT_PASS/${CF_CLIENT_PASS}/g" \
              -e "s/CLOUDFOUNDRY_SG/${CF_SG}/g" \
              -e "s/LS1_SUBNET/${LS1_SUBNET}/g" \
              -e "s/skip-ssl-validation: false/skip-ssl-validation: ${SKIP_SSL_VALIDATION}/g"\
