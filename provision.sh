@@ -25,10 +25,11 @@ cdhManager=$1
 cdhMasterArray=$2
 cdhWorkerArray=$3
 consulMasterArray=$4
+ntpServers=$5
 
 # These variables must be defined at the end
-httpProxy=$5
-httpsProxy=$6
+httpProxy=$6
+httpsProxy=$7
 
 declare -a machineIPs
 
@@ -149,5 +150,8 @@ do
     ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/hosts /etc/hosts
   fi
 done
+
+mkdir -p group_vars
+echo "ntp_servers: [$ntpServers]" > group_vars/cdh-all
 
 exec bash bin/run_ansible.sh

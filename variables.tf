@@ -29,6 +29,10 @@ variable "ansible_repo_path" {}
 variable "cf_sg_id" {}
 variable "router_id" {}
 
+variable "ntp_servers" {
+  default = "0.pool.ntp.org,1.pool.ntp.org"
+}
+
 variable "network" {
   default = "192.168"
 }
