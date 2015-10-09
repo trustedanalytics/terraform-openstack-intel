@@ -25,7 +25,10 @@ variable "cdh_public_key_path" {}
 variable "floating_ip_pool" {}
 variable "network_external_id" {}
 variable "ansible_repo_path" {}
-variable "ntp_servers" {}
+
+variable "ntp_servers" {
+  default = "0.pool.ntp.org,1.pool.ntp.org"
+}
 
 variable "cf_admin_pass" {
   default = "c1oudc0w"
@@ -39,9 +42,11 @@ variable "region" {
 
   default = "RegionOne"
 }
+
 variable "network" {
 	default = "192.168"
 }
+
 variable "install_docker_services" {
   default = "true"
 }
@@ -95,9 +100,11 @@ variable "flavor_name" {
 variable "vol_size" {
   default = 75
 }
+
 variable "master_size" {
   default = 3
 }
+
 variable "worker_size" {
   default = 3
 }
@@ -121,7 +128,6 @@ variable "api_resource_pool"             { default = "medium" }
 variable "services_resource_pool"        { default = "medium" }
 variable "health_resource_pool"          { default = "medium" }
 variable "runner_resource_pool"          { default = "runner" }
-
 variable "debug" { default = "false" }
 variable "os_timeout" { default = "1200" }
 
