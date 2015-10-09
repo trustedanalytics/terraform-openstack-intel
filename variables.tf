@@ -25,7 +25,10 @@ variable "cdh_public_key_path" {}
 variable "floating_ip_pool" {}
 variable "network_external_id" {}
 variable "ansible_repo_path" {}
-variable "cf_admin_pass" {}
+
+variable "cf_admin_pass" {
+  default = "c1oudc0w"
+}
 
 variable "region" {
 
