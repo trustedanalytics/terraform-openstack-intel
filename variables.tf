@@ -30,6 +30,10 @@ variable "cf_admin_pass" {
   default = "c1oudc0w"
 }
 
+variable "cf_client_pass" {
+  default = "c1oudc0w"
+}
+
 variable "region" {
 
   default = "RegionOne"

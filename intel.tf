@@ -34,6 +34,7 @@ module "cf-install" {
   region = "${var.region}"
   network_external_id = "${var.network_external_id}"
   cf_admin_pass = "${var.cf_admin_pass}"
+  cf_client_pass = "${var.cf_client_pass}"
   image_name="${var.ubuntu_image_name}"
   install_docker_services="${var.install_docker_services}"
   install_logsearch="${var.install_logsearch}"
@@ -235,4 +236,8 @@ output "offline_java_buildpack" {
 
 output "consul_masters" {
   value = "${module.cloudera.consul_masters}"
+}
+
+output "cf_client_pass" {
+  value = "${var.cf_client_pass}"
 }
