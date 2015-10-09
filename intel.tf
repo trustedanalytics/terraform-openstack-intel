@@ -88,6 +88,7 @@ module "cloudera" {
   https_proxy="${var.https_proxy}"
   dns1="${var.dns1}"
   dns2="${var.dns2}"
+  ntp_servers = "${var.ntp_servers}"
 }
 
 
