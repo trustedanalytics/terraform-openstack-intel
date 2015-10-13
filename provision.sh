@@ -178,6 +178,7 @@ source ~/.rvm/scripts/rvm
 
 # Install BOSH CLI, bosh-bootstrap, spiff and other helpful plugins/tools
 gem install fog-aws -v 0.1.1 --no-ri --no-rdoc --quiet
+gem install bosh_cli_plugin_micro -v 1.3098.0 --no-ri --no-rdoc --quiet
 gem install bundler bosh-bootstrap --no-ri --no-rdoc --quiet
 
 # bosh-bootstrap handles provisioning the microbosh machine and installing bosh
