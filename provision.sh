@@ -93,9 +93,7 @@ if [[ $DEBUG == "true" ]]; then
 fi
 
 cd $HOME
-(("$?" == "0")) ||
-  fail "Could not find HOME folder, terminating install."
-
+(("$?" == "0")) || fail "Could not find HOME folder, terminating install."
 
 # Setup proxy
 if [[ $HTTP_PROXY != "" || $HTTPS_PROXY != "" ]]; then
@@ -118,28 +116,12 @@ fi
 
 # Prepare the jumpbox to be able to install ruby and git-based bosh and cf repos
 
-release=$(cat /etc/*release | tr -d '\n')
-case "${release}" in
-  (*Ubuntu*|*Debian*)
-    sudo apt-get update -yq
-    sudo apt-get install -yq aptitude
-    sudo aptitude -yq install build-essential vim-nox git unzip tree \
-      libxslt-dev libxslt1.1 libxslt1-dev libxml2 libxml2-dev \
-      libpq-dev libmysqlclient-dev libsqlite3-dev \
-      g++ gcc make libc6-dev libreadline6-dev zlib1g-dev libssl-dev libyaml-dev \
-      libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev automake \
-      libtool bison pkg-config libffi-dev cmake libcurl4-openssl-dev ntp
-    ;;
-  (*Centos*|*RedHat*|*Amazon*)
-    sudo yum update -y
-    sudo yum install -y epel-release
-    sudo yum install -y git unzip xz tree rsync openssl openssl-devel \
-    zlib zlib-devel libevent libevent-devel readline readline-devel cmake ntp \
-    htop wget tmux gcc g++ autoconf pcre pcre-devel vim-enhanced gcc mysql-devel \
-    postgresql-devel postgresql-libs sqlite-devel libxslt-devel libxml2-devel \
-    yajl-ruby
-    ;;
-esac
+sudo apt-get -qy update
+sudo apt-get -qy install build-essential vim-nox git unzip tree libxslt-dev \
+  libxslt1.1 libxslt1-dev libxml2 libxml2-dev libpq-dev libmysqlclient-dev \
+  libsqlite3-dev g++ gcc make libc6-dev libreadline6-dev zlib1g-dev libssl-dev \
+  libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev \
+  automake libtool bison pkg-config libffi-dev cmake libcurl4-openssl-dev ntp
 
 sudo sed -i -e '/^server/d' /etc/ntp.conf
 
@@ -152,8 +134,6 @@ done
 sudo service ntp restart
 
 cd $HOME
-
-
 
 # Install RVM
 
