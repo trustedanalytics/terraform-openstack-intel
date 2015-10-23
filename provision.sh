@@ -320,9 +320,9 @@ fi
   -e "s/services:\( \+\)[a-z\-\_A-Z0-1]\+\(.*# MARKER_FOR_POOL_PROVISION.*\)/services:\1${SERVICES_POOL}\2/" \
   -e "s/health:\( \+\)[a-z\-\_A-Z0-1]\+\(.*# MARKER_FOR_POOL_PROVISION.*\)/health:\1${HEALTH_POOL}\2/" \
   -e "s/runner:\( \+\)[a-z\-\_A-Z0-1]\+\(.*# MARKER_FOR_POOL_PROVISION.*\)/runner:\1${RUNNER_POOL}\2/" \
-  -e "s|\(dns:\).*|\1 [${CONSUL_MASTERS}]|" \
   -e "/8.8.8.8/d" \
   -e "/8.8.4.4/d" \
+  -e "s|\(dns:\).*|\1 [${CONSUL_MASTERS}]|" \
   -e "s/CF_ADMIN_PASS/${CF_ADMIN_PASS}/g" \
   -e "s/CF_CLIENT_PASS/${CF_CLIENT_PASS}/g" \
   deployments/cf-openstack-${CF_SIZE}.yml
@@ -415,9 +415,9 @@ if [[ $INSTALL_DOCKER == "true" ]]; then
   /bin/sed -i \
     -e "s/SUBNET_ID/${DOCKER_SUBNET}/g" \
     -e "s/DOCKER_SG/${CF_SG}/g" \
-    -e "s|\(dns_servers:\).*|\1 [${DNS1},${DNS2}]|" \
     -e "/8.8.8.8/d" \
     -e "/8.8.4.4/d" \
+    -e "s|\(dns_servers:\).*|\1 [${DNS1},${DNS2}]|" \
     "${dockerDeploymentManifest}"
 
   if [[ -n ${HTTP_PROXY} || -n ${HTTPS_PROXY} ]]; then
