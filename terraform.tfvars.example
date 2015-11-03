@@ -65,6 +65,6 @@ install_logsearch="false"
 
 # Do not change, expert mode required
 
-cf_release_version="211" #211 is currently the only supported version
+cf_release_version="212" #212 is currently the only supported version
 cf_boshworkspace_version="master" #we need to take the head of the repository because of needed fixes
 docker_boshworkspace_version="master"
