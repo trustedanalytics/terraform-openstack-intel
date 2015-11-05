@@ -14,6 +14,8 @@ network_external_id="{id of network}"
 ansible_repo_path="."
 cf_admin_pass="mysupersecretpassword"
 ntp_servers="0.pool.ntp.org,1.pool.ntp.org"
+dns1="{dns server}" # put your first local nameserver here
+dns2="{dns server}" # put your second local nameserver here
 
 # Default settings, change if needed
 
@@ -23,8 +25,6 @@ centos_image_name="centos-6-official"
 
 http_proxy="{set proxy}" # comment if not needed
 https_proxy="{set proxy}" # comment if not needed
-dns1="{dns server}" # comment if not needed
-dns2="{dns server}" # comment if not needed
 
 # How long should we wait before timing out on openstack VM creation/deletion? (seconds)
 #os_timeout=1200
