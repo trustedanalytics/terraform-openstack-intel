@@ -13,6 +13,7 @@ plan:
 	terraform plan -module-depth=-1 -var-file terraform.tfvars -out terraform.tfplan
 
 apply:
+	./platform-ansible/bin/download_jdk.sh
 	./platform-ansible/bin/download_jce.sh
 	terraform apply -var-file terraform.tfvars
 
