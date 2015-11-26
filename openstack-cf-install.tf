@@ -212,6 +212,20 @@ resource "openstack_compute_secgroup_v2" "cf" {
     self = true
   }
 
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65535"
+    cidr = "${var.additional_cf_sg_allow_1}"
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65535"
+    cidr = "${var.additional_cf_sg_allow_1}"
+  }
+
 }
 
 output "cf_sg" {
