@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# Copyright (c) 2015 Intel Corporation 
+# Copyright (c) 2015 Intel Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,34 +23,6 @@ import time
 import novaclient.client as nova_client
 import neutronclient.v2_0.client as neutron_client
 import cinderclient.v2.client as cinder_client
-
-
-def create_nova_client(auth_url, username, password, tenant_name, region_name):
-    nova = nova_client.Client(auth_url=auth_url,
-                              username=username,
-                              api_key=password,
-                              project_id=tenant_name,
-                              version='2',
-                              region_name=region_name)
-    return nova
-
-
-def create_neutron_client(auth_url, username, password, tenant_name, region_name):
-    neutron = neutron_client.Client(auth_url=auth_url,
-                                    username=username,
-                                    password=password,
-                                    tenant_name=tenant_name,
-                                    region_name=region_name)
-    return neutron
-
-
-def create_cinder_client(auth_url, username, password, tenant_name, region_name):
-    cinder = cinder_client.Client(auth_url=auth_url,
-                                  username=username,
-                                  api_key=password,
-                                  project_id=tenant_name,
-                                  region_name=region_name)
-    return cinder
 
 
 def detach_volumes(nova):
@@ -113,7 +85,6 @@ def delete_networks(neutron):
 def delete_network_components(neutron):
     try:
         router = neutron.list_routers()['routers'][0]
-
         print("\nDeleting router interfaces and subnets:")
         for subnet in neutron.list_subnets()['subnets']:
             print ("\t Deleting interface and subnet {0}".format(subnet['id']))
@@ -157,7 +128,7 @@ def add_auth_url_to_no_proxy_env(domain):
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Deletes all volumes, instances, Bosh images, networks, subnetworks,"
-                                                 "key pairs, elastic IPs and security groups"
+                                                 "key pairs, floating IPs and security groups"
                                                  " from given Openstack tenant.")
     parser.add_argument("-a", "--auth-url", required=True, help="Set authorization URL.")
     parser.add_argument("-u", "--username", required=True, help="Set Openstack username.")
@@ -180,9 +151,24 @@ if __name__ == '__main__':
     else:
         TIMEOUT = 120
 
-    nova_cl = create_nova_client(args.auth_url, args.username, args.password, args.tenant_name, args.region_name)
-    neutron_cl = create_neutron_client(args.auth_url, args.username, args.password, args.tenant_name, args.region_name)
-    cinder_cl = create_cinder_client(args.auth_url, args.username, args.password, args.tenant_name, args.region_name)
+    nova_cl = nova_client.Client(auth_url=args.auth_url,
+                                 username=args.username,
+                                 api_key=args.password,
+                                 project_id=args.tenant_name,
+                                 version='2',
+                                 region_name=args.region_name)
+
+    neutron_cl = neutron_client.Client(auth_url=args.auth_url,
+                                       username=args.username,
+                                       password=args.password,
+                                       tenant_name=args.tenant_name,
+                                       region_name=args.region_name)
+
+    cinder_cl = cinder_client.Client(auth_url=args.auth_url,
+                                     username=args.username,
+                                     api_key=args.password,
+                                     project_id=args.tenant_name,
+                                     region_name=args.region_name)
 
     # ================= Delete computation components  =================
     detach_volumes(nova_cl)
