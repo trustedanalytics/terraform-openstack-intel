@@ -329,6 +329,15 @@ else
   sed -i -e "s/^\s\+- PRIVATE_DOMAIN_PLACEHOLDER//" deployments/cf-openstack-${CF_SIZE}.yml
 fi
 
+# generate UAA certificate pair
+if grep -q UAAC deployments/cf-openstack-${CF_SIZE}.yml; then
+  openssl genrsa -out /tmp/uaac_prv.pem 2048
+  openssl rsa -pubout -in /tmp/uaac_prv.pem -out /tmp/uaac_pub.pem
+  sed -i -e "s/UAAC_PRV_KEY/$(</tmp/uaac_prv.pem sed -e 's/[\&/]/\\&/g' -e 's/$/\\n    /' | tr -d '\n')/g" deployments/cf-openstack-${CF_SIZE}.yml
+  sed -i -e "s/UAAC_PUB_KEY/$(</tmp/uaac_pub.pem sed -e 's/[\&/]/\\&/g' -e 's/$/\\n    /' | tr -d '\n')/g" deployments/cf-openstack-${CF_SIZE}.yml
+  rm -f /tmp/uaac_prv.pem /tmp/uaac_pub.pem
+fi
+
 if [[ -n "$CF_SG_ALLOWS" ]]; then
   replacement_text=""
   for cidr in $(echo $CF_SG_ALLOWS | tr "," "\n"); do
