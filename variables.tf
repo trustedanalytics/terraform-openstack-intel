@@ -138,3 +138,10 @@ variable "debug" {
 variable "offline_java_buildpack" {
   default = "true"
 }
+
+variable "git_account_url" {
+        default = "github.com/trustedanalytics"
+}
+variable "gh_auth" {
+ default = ""
+}

@@ -61,6 +61,8 @@ module "cf-install" {
   additional_cf_sg_allow_1="${module.cloudera.cdh_cidr}"
   offline_java_buildpack = "${var.offline_java_buildpack}"
   ntp_servers = "${var.ntp_servers}"
+  git_account_url = "${var.git_account_url}"
+  gh_auth = "${var.gh_auth}"
 }
 
 module "cloudera" {
@@ -250,4 +252,11 @@ output "cf_client_pass" {
 
 output "ntp_servers" {
   value = "${var.ntp_servers}"
+}
+
+output "git_account_url" {
+  value = "${module.cf-install.git_account_url}"
+}
+output "gh_auth" {
+  value  = "${module.cf-install.gh_auth}"
 }
