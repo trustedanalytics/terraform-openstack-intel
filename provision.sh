@@ -59,6 +59,9 @@ CF_CLIENT_PASS=${30}
 
 NTP_SERVERS=${31}
 
+GIT_ACCOUNT_URL=${32}
+GH_AUTH=${33}
+
 DOCKER_BOSHWORKSPACE_VERSION=master
 
 BACKBONE_Z1_COUNT=COUNT
@@ -245,7 +248,11 @@ popd
 # may change in the future if we come up with a better way to handle maintaining
 # configs in a git repo
 if [[ ! -d "$HOME/workspace/deployments/cf-boshworkspace" ]]; then
-  git clone --branch  ${CF_BOSHWORKSPACE_VERSION} http://github.com/trustedanalytics/cf-boshworkspace
+  if [ -n "$GH_AUTH" ]; then
+    git clone --branch  ${CF_BOSHWORKSPACE_VERSION} https://${GH_AUTH}@${GIT_ACCOUNT_URL}/cf-boshworkspace.git
+  else
+    git clone --branch  ${CF_BOSHWORKSPACE_VERSION} https://${GIT_ACCOUNT_URL}/cf-boshworkspace.git
+  fi
 fi
 pushd cf-boshworkspace
 mkdir -p ssh
@@ -407,7 +414,11 @@ if [[ $INSTALL_DOCKER == "true" ]]; then
 
   cd ~/workspace/deployments
   if [[ ! -d "$HOME/workspace/deployments/docker-services-boshworkspace" ]]; then
-    git clone  --branch ${DOCKER_BOSHWORKSPACE_VERSION} https://github.com/trustedanalytics/docker-services-boshworkspace.git
+    if [ -n "$GH_AUTH" ]; then
+      git clone https://${GH_AUTH}@${GIT_ACCOUNT_URL}/docker-services-boshworkspace.git
+    else
+      git clone https://${GIT_ACCOUNT_URL}/docker-services-boshworkspace.git
+    fi
   fi
 
   echo "Update the docker-aws-vpc.yml with cf-boshworkspace parameters"

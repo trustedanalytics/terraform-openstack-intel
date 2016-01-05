@@ -75,6 +75,8 @@ assure_string_in_file $filename_provision 'CONSUL_MASTERS=${28}' "CONSUL_MASTERS
 assure_string_in_file $filename_provision 'CF_ADMIN_PASS=${29}' "CF_ADMIN_PASS=\"$(terraform output -state="${state_file}" cf_admin_pass)\""
 assure_string_in_file $filename_provision 'CF_CLIENT_PASS=${30}' "CF_CLIENT_PASS=\"$(terraform output -state="${state_file}" cf_client_pass)\""
 assure_string_in_file $filename_provision 'NTP_SERVERS=${31}' "NTP_SERVERS=\"$(terraform output -state="${state_file}" ntp_servers)\""
+assure_string_in_file $filename_provision 'GIT_ACCOUNT_URL=${32}' "GIT_ACCOUNT_URL=\"$(terraform output -state="${state_file}" git_account_url)\""
+assure_string_in_file $filename_provision 'GH_AUTH=${33}' "GH_AUTH=\"$(terraform output -state="${state_file}" gh_auth)\""
 
 for job in BACKBONE API SERVICES HEALTH RUNNER; do
 	for zone in Z1 Z2; do

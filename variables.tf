@@ -188,3 +188,6 @@ variable "offline_java_buildpack" { default = "false" }
 variable "ntp_servers" {
   default = "0.pool.ntp.org,1.pool.ntp.org"
 }
+
+variable "git_account_url" {}
+variable "gh_auth" {}
