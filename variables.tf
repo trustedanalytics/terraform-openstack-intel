@@ -97,10 +97,6 @@ variable "flavor_name" {
   default = "m1.medium"
 }
 
-variable "vol_size" {
-  default = 75
-}
-
 variable "master_size" {
   default = 3
 }
