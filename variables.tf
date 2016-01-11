@@ -52,6 +52,10 @@ variable "image_name" {
   default = "ubuntu-14.04"
 }
 
+variable "centos_image_name" {
+  default = "centos-6-official"
+}
+
 variable "flavor_name" {
   default = "m1.medium"
 }

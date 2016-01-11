@@ -27,9 +27,11 @@ INSTALL_DOCKER=${13}
 LB_SUBNET1=${14}
 CF_SG=${15}
 CF_RELEASE_VERSION=${16}
+QUAY_USERNAME=${17}
+QUAY_PASS=${18}
 
-HTTP_PROXY=${17}
-HTTPS_PROXY=${18}
+HTTP_PROXY=${19}
+HTTPS_PROXY=${20}
 
 OPENSTACK_IP=$(echo $OS_AUTH_URL | grep -E -o "([0-9]{1,3}[.]){3}[0-9]{1,3}")
 LB_WHITELIST="$(echo LB_WHITELIST_IPS | sed 's/ /,/g')"
@@ -86,7 +88,7 @@ RUNNER_POOL=POOL
 
 SKIP_SSL_VALIDATION=false
 
-boshDirectorHost="${IPMASK}.2.4"
+boshDirectorHost="${IPMASK}.2.5"
 
 logsearch_syslog="${IPMASK}.7.7"
 logsearch_es_ip="${IPMASK}.7.6"
@@ -124,7 +126,8 @@ sudo apt-get -qy install build-essential vim-nox git unzip tree libxslt-dev \
   libxslt1.1 libxslt1-dev libxml2 libxml2-dev libpq-dev libmysqlclient-dev \
   libsqlite3-dev g++ gcc make libc6-dev libreadline6-dev zlib1g-dev libssl-dev \
   libyaml-dev libsqlite3-dev sqlite3 autoconf libgdbm-dev libncurses5-dev \
-  automake libtool bison pkg-config libffi-dev cmake libcurl4-openssl-dev ntp
+  automake libtool bison pkg-config libffi-dev cmake libcurl4-openssl-dev ntp \
+  docker.io jq
 
 sudo sed -i -e '/^server/d' /etc/ntp.conf
 
@@ -445,6 +448,30 @@ if [[ $INSTALL_DOCKER == "true" ]]; then
   bundle install
   bosh deployment docker-openstack
   bosh prepare deployment
+
+  set +e
+  bosh -n deploy
+  set -e
+
+  DOCKER_IP=$(bosh vms 2>&1| awk '/docker\/0/ { print $8 }')
+  #list all images, convert to JSON, get the container image and tag with JQ
+  DOCKER_IMAGES=$(cat templates/docker-properties.yml | ruby -ryaml -rjson -e "print JSON.dump(YAML.load(ARGF))" |\
+    jq -r ".properties.broker.services[].plans[].container | [.image, .tag] | @sh" | sed "s/' '/:/;s/'//g")
+  #list all images in the jobs file
+  DOCKER_JOBS_IMAGES=$(cat templates/docker-jobs.yml | ruby -ryaml -rjson -e "print JSON.dump(YAML.load(ARGF))" | jq -r ".jobs[].properties.containers[].image | @sh" | sed "s/'//g")
+
+
+  #log in to quay when the username is provided
+  if [[ -n "$QUAY_USERNAME" ]]; then
+    docker -H "tcp://${DOCKER_IP}:4243" login -u $QUAY_USERNAME -p $QUAY_PASS -e test@test quay.io
+  fi
+
+  #pull all public images. private ones will fail when not logged in
+  set +e
+  for image in $DOCKER_IMAGES $DOCKER_JOBS_IMAGES; do
+    docker -H "tcp://${DOCKER_IP}:4243" pull $image
+  done
+  set -e
 
   # Keep trying until there is a successful BOSH deploy.
   for i in {0..2}

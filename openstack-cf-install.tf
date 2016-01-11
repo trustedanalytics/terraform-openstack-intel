@@ -263,6 +263,22 @@ resource "openstack_compute_instance_v2" "bastion" {
 
 }
 
+resource "openstack_compute_instance_v2" "nginx-master" {
+  name = "nginx-master"
+  image_name = "${var.centos_image_name}"
+  flavor_name = "${var.flavor_name}"
+  region = "${var.region}"
+  key_pair = "${openstack_compute_keypair_v2.keypair.name}"
+  security_groups = [ "${openstack_compute_secgroup_v2.cf.name}" ]
+  floating_ip = "${openstack_networking_floatingip_v2.cf_fp.address}"
+  config_drive = true
+
+  network {
+    uuid = "${openstack_networking_network_v2.internal_net.id}"
+  }
+
+}
+
 output "cf_api" {
   value = "api.run.${openstack_networking_floatingip_v2.cf_fp.address}.xip.io"
 }
@@ -427,4 +443,8 @@ output "git_account_url" {
 
 output "gh_auth" {
   value = "${var.gh_auth}"
+}
+
+output "nginx_ip" {
+  value = "${openstack_compute_instance_v2.nginx-master.access_ip_v4}"
 }
