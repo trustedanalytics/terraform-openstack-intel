@@ -67,3 +67,6 @@ variable "http_proxy" {
 variable "https_proxy" {
   default = ""
 }
+
+variable "cf_fp" {}
+variable "nginx_ip" {}

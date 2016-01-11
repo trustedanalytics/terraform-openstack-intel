@@ -25,11 +25,13 @@ cdhManager=$1
 cdhMasterArray=$2
 cdhWorkerArray=$3
 consulMasterArray=$4
-ntpServers=$5
+nginxMaster=$5
+ntpServers=$6
+cfFp=$7
 
 # These variables must be defined at the end
-httpProxy=$6
-httpsProxy=$7
+httpProxy=$8
+httpsProxy=$9
 
 declare -a machineIPs
 
@@ -50,6 +52,7 @@ pushd $HOME/ansible-cdh/platform-ansible
 
 envName=$(awk '/env_name/ { print $2 }' defaults/env.yml)
 useCustomDns=$(awk '/use_custom_dns/ { print $2 }' defaults/env.yml)
+echo "openstack_addr: $cfFp" >> defaults/env.yml
 
 if [[ $useCustomDns == 'true' ]]; then
   prefix=".node.${envName}.consul"
@@ -62,6 +65,17 @@ pushd inventory
 FILE="cdh"
 rm $FILE
 
+machineIPs+=($masterIP)
+masterIP=${5}
+masterHost="nginx-master"
+echo "[nginx-master]" >> $FILE
+echo "${masterHost}${prefix} ansible_ssh_host=${masterIP}" >> $FILE
+
+if [[ $useCustomDns == 'false' ]]; then
+  add_to_etc_hosts ${masterIP} ${masterHost}
+fi
+
+machineIPs+=($masterIP)
 
 managerIP=${1}
 managerHost="cdh-manager"
