@@ -26,6 +26,9 @@ centos_image_name="centos-6-official"
 http_proxy="{set proxy}" # comment if not needed
 https_proxy="{set proxy}" # comment if not needed
 
+quay_username = ""
+quay_pass = ""
+
 # Git account URL for accessing forked repos
 #git_account_url = "github.com/trustedanalytics" # without https:// and trailing /
 

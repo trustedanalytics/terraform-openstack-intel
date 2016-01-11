@@ -36,6 +36,7 @@ module "cf-install" {
   cf_admin_pass = "${var.cf_admin_pass}"
   cf_client_pass = "${var.cf_client_pass}"
   image_name="${var.ubuntu_image_name}"
+  centos_image_name="${var.centos_image_name}"
   install_docker_services="${var.install_docker_services}"
   install_logsearch="${var.install_logsearch}"
   http_proxy="${var.http_proxy}"
@@ -85,12 +86,14 @@ module "cloudera" {
   master_size="${var.master_size}"
   cf_sg_id="${module.cf-install.cf_sg_id}"
   router_id="${module.cf-install.router_id}"
+  cf_fp = "${module.cf-install.cf_fp_address}"
   image_name="${var.centos_image_name}"
   http_proxy="${var.http_proxy}"
   https_proxy="${var.https_proxy}"
   dns1="${var.dns1}"
   dns2="${var.dns2}"
   ntp_servers = "${var.ntp_servers}"
+  nginx_ip = "${module.cf-install.nginx_ip}"
 }
 
 
@@ -259,4 +262,12 @@ output "git_account_url" {
 }
 output "gh_auth" {
   value  = "${module.cf-install.gh_auth}"
+}
+
+output "quay_username" {
+  value = "${var.quay_username}"
+}
+
+output "quay_pass" {
+  value = "${var.quay_pass}"
 }

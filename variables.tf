@@ -145,3 +145,11 @@ variable "git_account_url" {
 variable "gh_auth" {
  default = ""
 }
+
+variable "quay_username" {
+  default = ""
+}
+
+variable "quay_pass" {
+  default = ""
+}
