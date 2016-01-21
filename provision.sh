@@ -150,11 +150,11 @@ fi
 cd $HOME
 
 if [[ ! "$(ls -A $HOME/.rvm/environments)" ]]; then
-  ~/.rvm/bin/rvm install ruby-2.1
+  ~/.rvm/bin/rvm install ruby-2.1.5
 fi
 
 if [[ ! -d "$HOME/.rvm/environments/default" ]]; then
-  ~/.rvm/bin/rvm alias create default 2.1
+  ~/.rvm/bin/rvm alias create default ruby-2.1.5
 fi
 
 source ~/.rvm/environments/default
