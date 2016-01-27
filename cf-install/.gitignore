@@ -1,0 +1,9 @@
+*.tfvars
+*.tfplan
+*.tfstate
+*.tfstate.backup
+crash.log
+.terraform/
+terraform-provider-openstack
+provision/provision.sh
+.DS_Store
