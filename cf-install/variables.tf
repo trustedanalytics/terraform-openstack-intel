@@ -40,7 +40,7 @@ variable "docker_boshworkspace_version" {
   default = "master"
 }
 
-variable "cf_boshworkspace_version" {
+variable "cf_boshworkspace_branch" {
   default = "v1.1.14"
 }
 

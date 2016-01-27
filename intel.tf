@@ -43,7 +43,7 @@ module "cf-install" {
   https_proxy="${var.https_proxy}"
   deployment_size="${var.deployment_size}"
   cf_release_version="${var.cf_release_version}"
-  cf_boshworkspace_version = "${var.cf_boshworkspace_version}"
+  cf_boshworkspace_branch = "${var.cf_boshworkspace_branch}"
   debug = "${var.debug}"
   private_cf_domains="${var.private_cf_domains}"
   backbone_resource_pool        = "${var.backbone_resource_pool}"
@@ -135,8 +135,8 @@ output "cf_size" {
 output "cf_sg" {
   value = "${module.cf-install.cf_sg}"
 }
-output "cf_boshworkspace_version" {
-  value = "${module.cf-install.cf_boshworkspace_version}"
+output "cf_boshworkspace_branch" {
+  value = "${module.cf-install.cf_boshworkspace_branch}"
 }
 output "cf_domain" {
   value = "${module.cf-install.cf_domain}"

@@ -323,8 +323,8 @@ output "cf_size" {
   value = "${var.cf_size}"
 }
 
-output "cf_boshworkspace_version" {
-  value = "${var.cf_boshworkspace_version}"
+output "cf_boshworkspace_branch" {
+  value = "${var.cf_boshworkspace_branch}"
 }
 
 output "cf_domain" {

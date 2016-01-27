@@ -59,7 +59,7 @@ variable "docker_boshworkspace_version" {
   default = "master"
 }
 
-variable "cf_boshworkspace_version" {
+variable "cf_boshworkspace_branch" {
   default = "cf-207"
 }
 
@@ -78,7 +78,7 @@ variable "deployment_size" {
   default = "small"
 }
 
-variable "cf_boshworkspace_version" {
+variable "cf_boshworkspace_branch" {
   default = "cf-207"
 }
 
