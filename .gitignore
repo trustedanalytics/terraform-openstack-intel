@@ -6,3 +6,4 @@ crash.log
 .terraform/
 keys/
 platform-ansible
+env.yml
