@@ -55,14 +55,6 @@ variable "cf_domain" {
   default = "XIP"
 }
 
-variable "docker_boshworkspace_version" {
-  default = "master"
-}
-
-variable "cf_boshworkspace_version" {
-  default = "cf-207"
-}
-
 variable "cf_size" {
   default = "tiny"
 }
@@ -76,10 +68,6 @@ variable "https_proxy" {
 
 variable "deployment_size" {
   default = "small"
-}
-
-variable "cf_boshworkspace_version" {
-  default = "cf-207"
 }
 
 variable "cf_release_version" {
@@ -139,12 +127,12 @@ variable "offline_java_buildpack" {
   default = "true"
 }
 
-variable "git_account_url" {
-        default = "github.com/trustedanalytics"
-}
-variable "gh_auth" {
- default = ""
-}
+variable "cf_boshworkspace_repository" {}
+variable "cf_boshworkspace_branch" {}
+variable "docker_services_boshworkspace_repository" {}
+variable "docker_services_boshworkspace_branch" {}
+variable "logsearch_workspace_repository" {}
+variable "logsearch_workspace_branch" {}
 
 variable "quay_username" {
   default = ""

@@ -29,13 +29,6 @@ https_proxy="{set proxy}" # comment if not needed
 quay_username = ""
 quay_pass = ""
 
-# Git account URL for accessing forked repos
-#git_account_url = "github.com/trustedanalytics" # without https:// and trailing /
-
-# Optionally pass user and token for access to github.com
-#gh_auth="user:token"
-
-
 # How long should we wait before timing out on openstack VM creation/deletion? (seconds)
 #os_timeout=1200
 
@@ -76,5 +69,15 @@ install_logsearch="false"
 # Do not change, expert mode required
 
 cf_release_version="212" #212 is currently the only supported version
-cf_boshworkspace_version="TAP-2016-JAN-2" #we need to take the head of the repository because of needed fixes
-docker_boshworkspace_version="master"
+
+# cf-boshworkspace
+cf_boshworkspace_repository="https://github.com/trustedanalytics/cf-boshworkspace.git"
+cf_boshworkspace_branch="TAP-2016-JAN-2"
+
+# docker-services-boshworkspace
+docker_services_boshworkspace_repository="https://github.com/trustedanalytics/docker-services-boshworkspace.git"
+docker_services_boshworkspace_branch="TAP-2016-JAN-2"
+
+# logsearch-workspace
+logsearch_workspace_repository="https://github.com/trustedanalytics/logsearch-workspace.git"
+logsearch_workspace_branch="TAP-2016-JAN-2"

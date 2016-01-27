@@ -43,7 +43,6 @@ module "cf-install" {
   https_proxy="${var.https_proxy}"
   deployment_size="${var.deployment_size}"
   cf_release_version="${var.cf_release_version}"
-  cf_boshworkspace_version = "${var.cf_boshworkspace_version}"
   debug = "${var.debug}"
   private_cf_domains="${var.private_cf_domains}"
   backbone_resource_pool        = "${var.backbone_resource_pool}"
@@ -57,13 +56,16 @@ module "cf-install" {
   install_logsearch             = "${var.install_logsearch}"
   dns1                          = "${var.dns1}"
   dns2                          = "${var.dns2}"
-  docker_boshworkspace_version  = "${var.docker_boshworkspace_version}"
   os_timeout                    = "${var.os_timeout}"
   additional_cf_sg_allow_1="${module.cloudera.cdh_cidr}"
   offline_java_buildpack = "${var.offline_java_buildpack}"
   ntp_servers = "${var.ntp_servers}"
-  git_account_url = "${var.git_account_url}"
-  gh_auth = "${var.gh_auth}"
+  cf_boshworkspace_repository = "${var.cf_boshworkspace_repository}"
+  cf_boshworkspace_branch = "${var.cf_boshworkspace_branch}"
+  docker_services_boshworkspace_repository = "${var.docker_services_boshworkspace_repository}"
+  docker_services_boshworkspace_branch = "${var.docker_services_boshworkspace_branch}"
+  logsearch_workspace_repository = "${var.logsearch_workspace_repository}"
+  logsearch_workspace_branch = "${var.logsearch_workspace_branch}"
 }
 
 module "cloudera" {
@@ -134,9 +136,6 @@ output "cf_size" {
 }
 output "cf_sg" {
   value = "${module.cf-install.cf_sg}"
-}
-output "cf_boshworkspace_version" {
-  value = "${module.cf-install.cf_boshworkspace_version}"
 }
 output "cf_domain" {
   value = "${module.cf-install.cf_domain}"
@@ -229,10 +228,6 @@ output "dns2" {
   value = "${module.cf-install.dns2}"
 }
 
-output "docker_boshworkspace_version" {
-  value = "${module.cf-install.docker_boshworkspace_version}"
-}
-
 output "os_timeout" {
   value = "${module.cf-install.os_timeout}"
 }
@@ -257,11 +252,28 @@ output "ntp_servers" {
   value = "${var.ntp_servers}"
 }
 
-output "git_account_url" {
-  value = "${module.cf-install.git_account_url}"
+output "cf_boshworkspace_repository" {
+  value = "${module.cf-install.cf_boshworkspace_repository}"
 }
-output "gh_auth" {
-  value  = "${module.cf-install.gh_auth}"
+
+output "cf_boshworkspace_branch" {
+  value = "${module.cf-install.cf_boshworkspace_branch}"
+}
+
+output "docker_services_boshworkspace_repository" {
+  value = "${module.cf-install.docker_services_boshworkspace_repository}"
+}
+
+output "docker_services_boshworkspace_branch" {
+  value = "${module.cf-install.docker_services_boshworkspace_branch}"
+}
+
+output "logsearch_workspace_repository" {
+  value = "${module.cf-install.logsearch_workspace_repository}"
+}
+
+output "logsearch_workspace_branch" {
+  value = "${module.cf-install.logsearch_workspace_branch}"
 }
 
 output "quay_username" {

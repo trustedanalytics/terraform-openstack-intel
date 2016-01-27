@@ -1,9 +1,0 @@
-[submodule "cdh"]
-	path = cdh
-	url = https://github.com/trustedanalytics/terraform-openstack-cdh.git
-[submodule "cf-install"]
-	path = cf-install
-	url = https://github.com/trustedanalytics/terraform-openstack-cf-install.git
-[submodule "platform-ansible"]
-	path = platform-ansible
-	url = https://github.com/trustedanalytics/platform-ansible.git
