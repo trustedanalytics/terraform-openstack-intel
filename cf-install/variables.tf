@@ -191,6 +191,3 @@ variable "docker_services_boshworkspace_repository" {}
 variable "docker_services_boshworkspace_branch" {}
 variable "logsearch_workspace_repository" {}
 variable "logsearch_workspace_branch" {}
-
-variable "git_account_url" {}
-variable "gh_auth" {}
