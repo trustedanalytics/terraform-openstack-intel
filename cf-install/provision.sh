@@ -62,11 +62,13 @@ NTP_SERVERS=${32}
 
 CF_BOSHWORKSPACE_REPOSITORY=${33}
 CF_BOSHWORKSPACE_BRANCH=${34}
+DOCKER_SERVICES_BOSHWORKSPACE_REPOSITORY=${35}
+DOCKER_SERVICES_BOSHWORKSPACE_BRANCH=${36}
+LOGSEARCH_WORKSPACE_REPOSITORY=${37}
+LOGSEARCH_WORKSPACE_BRANCH=${38}
 
-GIT_ACCOUNT_URL=${35}
-GH_AUTH=${36}
-
-DOCKER_BOSHWORKSPACE_VERSION=master
+GIT_ACCOUNT_URL=${39}
+GH_AUTH=${40}
 
 BACKBONE_Z1_COUNT=COUNT
 API_Z1_COUNT=COUNT
@@ -413,12 +415,9 @@ bosh -n deploy
 if [[ $INSTALL_DOCKER == "true" ]]; then
 
   cd ~/workspace/deployments
-  if [[ ! -d "$HOME/workspace/deployments/docker-services-boshworkspace" ]]; then
-    if [ -n "$GH_AUTH" ]; then
-      git clone https://${GH_AUTH}@${GIT_ACCOUNT_URL}/docker-services-boshworkspace.git
-    else
-      git clone https://${GIT_ACCOUNT_URL}/docker-services-boshworkspace.git
-    fi
+
+  if [[ ! -d 'docker-services-boshworkspace' ]]; then
+    git clone -b ${DOCKER_SERVICES_BOSHWORKSPACE_BRANCH} ${DOCKER_SERVICES_BOSHWORKSPACE_REPOSITORY} docker-services-boshworkspace
   fi
 
   echo "Update the docker-aws-vpc.yml with cf-boshworkspace parameters"
@@ -480,11 +479,12 @@ fi
 if [[ $INSTALL_LOGSEARCH == "true" ]]; then
 
     cd ~/workspace/deployments
-    if [[ ! -d "$HOME/workspace/deployments/logsearch-boshworkspace" ]]; then
-        git clone https://github.com/trustedanalytics/logsearch-boshworkspace.git
+
+    if [[ ! -d 'logsearch-workspace' ]]; then
+        git clone -b ${LOGSEARCH_WORKSPACE_BRANCH} ${LOGSEARCH_WORKSPACE_REPOSITORY} logsearch-workspace
     fi
 
-    cd logsearch-boshworkspace
+    cd logsearch-workspace
 
     /bin/sed -i \
              -e "s/DIRECTOR_UUID/${DIRECTOR_UUID}/g" \

@@ -36,10 +36,6 @@ variable "cf_domain" {
   default = "XIP"
 }
 
-variable "docker_boshworkspace_version" {
-  default = "master"
-}
-
 variable "cf_size" {
   default = "tiny"
 }
@@ -191,6 +187,10 @@ variable "ntp_servers" {
 
 variable "cf_boshworkspace_repository" {}
 variable "cf_boshworkspace_branch" {}
+variable "docker_services_boshworkspace_repository" {}
+variable "docker_services_boshworkspace_branch" {}
+variable "logsearch_workspace_repository" {}
+variable "logsearch_workspace_branch" {}
 
 variable "git_account_url" {}
 variable "gh_auth" {}
