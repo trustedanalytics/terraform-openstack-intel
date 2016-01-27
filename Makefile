@@ -1,3 +1,4 @@
+SHELL = /bin/bash
 .PHONY: all update plan apply destroy provision
 
 include *.mk
@@ -12,9 +13,6 @@ ifneq ($(wildcard platform-ansible),)
 else
 	git clone -b ${PLATFORM_ANSIBLE_BRANCH} ${PLATFORM_ANSIBLE_REPOSITORY} platform-ansible
 endif
-
-cfssh:
-	./bin/cfssh
 
 plan:
 	terraform get -update
@@ -37,4 +35,4 @@ clean:
 	rm -fr platform-ansible
 
 provision:
-	./bin/provision
+	pushd cf-install; export STATE_FILE="../terraform.tfstate"; make provision; popd
