@@ -145,7 +145,7 @@ resource "openstack_compute_keypair_v2" "cdh-keypair" {
 }
 
 module "consul" {
-  source = "github.com/trustedanalytics/terraform-openstack-consul"
+  source = "./consul"
 
   image_name = "${var.image_name}"
   flavor_name = "${var.flavor_name}"
