@@ -76,5 +76,9 @@ install_logsearch="false"
 # Do not change, expert mode required
 
 cf_release_version="212" #212 is currently the only supported version
-cf_boshworkspace_branch="TAP-2016-JAN-2" #we need to take the head of the repository because of needed fixes
+
+# cf-boshworkspace
+cf_boshworkspace_repository="https://github.com/trustedanalytics/cf-boshworkspace.git"
+cf_boshworkspace_branch="TAP-2016-JAN-2"
+
 docker_boshworkspace_version="master"

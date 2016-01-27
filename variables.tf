@@ -59,10 +59,6 @@ variable "docker_boshworkspace_version" {
   default = "master"
 }
 
-variable "cf_boshworkspace_branch" {
-  default = "cf-207"
-}
-
 variable "cf_size" {
   default = "tiny"
 }
@@ -76,10 +72,6 @@ variable "https_proxy" {
 
 variable "deployment_size" {
   default = "small"
-}
-
-variable "cf_boshworkspace_branch" {
-  default = "cf-207"
 }
 
 variable "cf_release_version" {
@@ -138,6 +130,9 @@ variable "debug" {
 variable "offline_java_buildpack" {
   default = "true"
 }
+
+variable "cf_boshworkspace_repository" {}
+variable "cf_boshworkspace_branch" {}
 
 variable "git_account_url" {
         default = "github.com/trustedanalytics"

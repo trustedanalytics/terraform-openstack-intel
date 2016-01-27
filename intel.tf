@@ -43,7 +43,6 @@ module "cf-install" {
   https_proxy="${var.https_proxy}"
   deployment_size="${var.deployment_size}"
   cf_release_version="${var.cf_release_version}"
-  cf_boshworkspace_branch = "${var.cf_boshworkspace_branch}"
   debug = "${var.debug}"
   private_cf_domains="${var.private_cf_domains}"
   backbone_resource_pool        = "${var.backbone_resource_pool}"
@@ -62,6 +61,8 @@ module "cf-install" {
   additional_cf_sg_allow_1="${module.cloudera.cdh_cidr}"
   offline_java_buildpack = "${var.offline_java_buildpack}"
   ntp_servers = "${var.ntp_servers}"
+  cf_boshworkspace_repository = "${var.cf_boshworkspace_repository}"
+  cf_boshworkspace_branch = "${var.cf_boshworkspace_branch}"
   git_account_url = "${var.git_account_url}"
   gh_auth = "${var.gh_auth}"
 }
@@ -134,9 +135,6 @@ output "cf_size" {
 }
 output "cf_sg" {
   value = "${module.cf-install.cf_sg}"
-}
-output "cf_boshworkspace_branch" {
-  value = "${module.cf-install.cf_boshworkspace_branch}"
 }
 output "cf_domain" {
   value = "${module.cf-install.cf_domain}"
@@ -255,6 +253,14 @@ output "cf_client_pass" {
 
 output "ntp_servers" {
   value = "${var.ntp_servers}"
+}
+
+output "cf_boshworkspace_repository" {
+  value = "${module.cf-install.cf_boshworkspace_repository}"
+}
+
+output "cf_boshworkspace_branch" {
+  value = "${module.cf-install.cf_boshworkspace_branch}"
 }
 
 output "git_account_url" {

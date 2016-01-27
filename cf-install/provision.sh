@@ -20,18 +20,17 @@ CF_SUBNET1=${6}
 IPMASK=${7}
 CF_IP=${8}
 CF_SIZE=${9}
-CF_BOSHWORKSPACE_BRANCH=${10}
-CF_DOMAIN=${11}
-DOCKER_SUBNET=${12}
-INSTALL_DOCKER=${13}
-LB_SUBNET1=${14}
-CF_SG=${15}
-CF_RELEASE_VERSION=${16}
-QUAY_USERNAME=${17}
-QUAY_PASS=${18}
+CF_DOMAIN=${10}
+DOCKER_SUBNET=${11}
+INSTALL_DOCKER=${12}
+LB_SUBNET1=${13}
+CF_SG=${14}
+CF_RELEASE_VERSION=${15}
+QUAY_USERNAME=${16}
+QUAY_PASS=${17}
 
-HTTP_PROXY=${19}
-HTTPS_PROXY=${20}
+HTTP_PROXY=${18}
+HTTPS_PROXY=${19}
 
 OPENSTACK_IP=$(echo $OS_AUTH_URL | grep -E -o "([0-9]{1,3}[.]){3}[0-9]{1,3}")
 LB_WHITELIST="$(echo LB_WHITELIST_IPS | sed 's/ /,/g')"
@@ -39,30 +38,33 @@ CF_WHITELIST="$(echo CF_WHITELIST_IPS | sed 's/ /,/g')"
 DK_WHITELIST="$(echo DK_WHITELIST_IPS | sed 's/ /,/g')"
 NO_PROXY="LOCALHOST_WHITELIST,$LB_WHITELIST,$CF_WHITELIST,$DK_WHITELIST,$OPENSTACK_IP"
 
-DEBUG=${19}
+DEBUG=${20}
 
-PRIVATE_DOMAINS=${20}
+PRIVATE_DOMAINS=${21}
 
-INSTALL_LOGSEARCH=${21}
-LS1_SUBNET=${22}
-CF_SG_ALLOWS=${23}
+INSTALL_LOGSEARCH=${22}
+LS1_SUBNET=${23}
+CF_SG_ALLOWS=${24}
 
-DNS1=${24}
-DNS2=${25}
+DNS1=${25}
+DNS2=${26}
 
-OS_TIMEOUT=${26}
+OS_TIMEOUT=${27}
 
-OFFLINE_JAVA_BUILDPACK=${27}
+OFFLINE_JAVA_BUILDPACK=${28}
 
-CONSUL_MASTERS=${28}
+CONSUL_MASTERS=${29}
 
-CF_ADMIN_PASS=${29}
-CF_CLIENT_PASS=${30}
+CF_ADMIN_PASS=${30}
+CF_CLIENT_PASS=${31}
 
-NTP_SERVERS=${31}
+NTP_SERVERS=${32}
 
-GIT_ACCOUNT_URL=${32}
-GH_AUTH=${33}
+CF_BOSHWORKSPACE_REPOSITORY=${33}
+CF_BOSHWORKSPACE_BRANCH=${34}
+
+GIT_ACCOUNT_URL=${35}
+GH_AUTH=${36}
 
 DOCKER_BOSHWORKSPACE_VERSION=master
 
@@ -248,16 +250,10 @@ if [[ ! "$?" == 0 ]]; then
 fi
 popd
 
-# There is a specific branch of cf-boshworkspace that we use for terraform. This
-# may change in the future if we come up with a better way to handle maintaining
-# configs in a git repo
-if [[ ! -d "$HOME/workspace/deployments/cf-boshworkspace" ]]; then
-  if [ -n "$GH_AUTH" ]; then
-    git clone --branch  ${CF_BOSHWORKSPACE_BRANCH} https://${GH_AUTH}@${GIT_ACCOUNT_URL}/cf-boshworkspace.git
-  else
-    git clone --branch  ${CF_BOSHWORKSPACE_BRANCH} https://${GIT_ACCOUNT_URL}/cf-boshworkspace.git
-  fi
+if [[ ! -d 'cf-boshworkspace' ]]; then
+  git clone --branch ${CF_BOSHWORKSPACE_BRANCH} ${CF_BOSHWORKSPACE_REPOSITORY} cf-boshworkspace
 fi
+
 pushd cf-boshworkspace
 mkdir -p ssh
 gem install bundler

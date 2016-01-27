@@ -40,10 +40,6 @@ variable "docker_boshworkspace_version" {
   default = "master"
 }
 
-variable "cf_boshworkspace_branch" {
-  default = "v1.1.14"
-}
-
 variable "cf_size" {
   default = "tiny"
 }
@@ -192,6 +188,9 @@ variable "offline_java_buildpack" { default = "false" }
 variable "ntp_servers" {
   default = "0.pool.ntp.org,1.pool.ntp.org"
 }
+
+variable "cf_boshworkspace_repository" {}
+variable "cf_boshworkspace_branch" {}
 
 variable "git_account_url" {}
 variable "gh_auth" {}

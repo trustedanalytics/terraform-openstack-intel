@@ -323,10 +323,6 @@ output "cf_size" {
   value = "${var.cf_size}"
 }
 
-output "cf_boshworkspace_branch" {
-  value = "${var.cf_boshworkspace_branch}"
-}
-
 output "cf_domain" {
   value = "${var.cf_domain}"
 }
@@ -435,6 +431,14 @@ output "offline_java_buildpack" {
 
 output "ntp_servers" {
   value = "${var.ntp_servers}"
+}
+
+output "cf_boshworkspace_repository" {
+  value = "${var.cf_boshworkspace_repository}"
+}
+
+output "cf_boshworkspace_branch" {
+  value = "${var.cf_boshworkspace_branch}"
 }
 
 output "git_account_url" {
