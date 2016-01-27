@@ -5,3 +5,4 @@
 crash.log
 .terraform/
 keys/
+platform-ansible

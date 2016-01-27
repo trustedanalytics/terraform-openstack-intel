@@ -1,9 +1,17 @@
 .PHONY: all update plan apply destroy provision
 
+include *.mk
+
 all: update plan apply provision
 
 update:
-	./bin/update
+	git pull
+
+ifneq ($(wildcard platform-ansible),)
+	cd platform-ansible && git pull origin ${PLATFORM_ANSIBLE_BRANCH}
+else
+	git clone -b ${PLATFORM_ANSIBLE_BRANCH} ${PLATFORM_ANSIBLE_REPOSITORY} platform-ansible
+endif
 
 cfssh:
 	./bin/cfssh
@@ -26,6 +34,7 @@ clean:
 	rm -f terraform.tfplan
 	rm -f terraform.tfstate
 	rm -fR .terraform/
+	rm -fr platform-ansible
 
 provision:
 	./bin/provision
