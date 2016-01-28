@@ -94,6 +94,8 @@ boshDirectorHost="${IPMASK}.2.5"
 logsearch_syslog="${IPMASK}.7.7"
 logsearch_es_ip="${IPMASK}.7.6"
 
+STEMCELL_VERSION='3104'
+
 if [[ $DEBUG == "true" ]]; then
   set -x
 fi
@@ -178,12 +180,18 @@ bundle install
 # on it. This is very nice of bosh-bootstrap. Everyone make sure to thank bosh-bootstrap
 mkdir -p {bin,workspace/deployments/microbosh,workspace/tools}
 pushd workspace/deployments
+
+# TODO: Use this stemcell in BOSH workspaces
+STEMCELL=~/bosh-stemcell-${STEMCELL_VERSION}-openstack-kvm-ubuntu-trusty-go_agent.tgz
+test -e ${STEMCELL} || wget -O ${STEMCELL} https://bosh.io/d/stemcells/bosh-openstack-kvm-ubuntu-trusty-go_agent?v=${STEMCELL_VERSION}
+
 pushd microbosh
 create_settings_yml() {
 cat <<EOF > settings.yml
 ---
 bosh:
   name: bosh-${OS_TENANT}
+  stemcell_path: ${STEMCELL}
 provider:
   name: openstack
   credentials:
