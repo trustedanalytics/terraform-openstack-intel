@@ -6,7 +6,7 @@ include *.mk
 all: update plan apply provision
 
 update:
-	git pull
+	-git rev-parse @{upstream} && git pull
 
 ifneq ($(wildcard platform-ansible),)
 	cd platform-ansible && git pull origin ${PLATFORM_ANSIBLE_BRANCH}
