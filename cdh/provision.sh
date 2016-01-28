@@ -45,6 +45,9 @@ if [[ -n "${httpProxy}" && -n "${httpsProxy}" ]]; then
   echo "proxy=${httpProxy}" | sudo tee -a /etc/yum.conf
 fi
 
+sudo sed -i -e 's@^mirrorlist@#mirrorlist@' /etc/yum.repos.d/epel*.repo
+sudo sed -i -e 's@^#baseurl.*/epel@baseurl=http://dl.fedoraproject.org/pub/epel@' /etc/yum.repos.d/epel*.repo
+sudo yum clean all
 sudo yum install ansible tmux vim -y
 chmod 600 $HOME/.ssh/id_rsa
 
