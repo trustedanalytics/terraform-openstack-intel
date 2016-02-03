@@ -1,0 +1,129 @@
+# Copyright (c) 2016 Intel Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+variable "hybrid_cdh_cidr" {}
+
+resource "openstack_compute_secgroup_v2" "cf" {
+  name = "cf"
+  description = "Cloud Foundry Security groups"
+  region = "${var.region}"
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "22"
+    to_port = "22"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "80"
+    to_port = "80"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "443"
+    to_port = "443"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "4443"
+    to_port = "4443"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "4222"
+    to_port = "25777"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "icmp"
+    from_port = "-1"
+    to_port = "-1"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "icmp"
+    from_port = "-1"
+    to_port = "-1"
+    self = true
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65535"
+    self = true
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65535"
+    self = true
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65535"
+    cidr = "${var.hybrid_cdh_cidr}"
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65535"
+    cidr = "${var.hybrid_cdh_cidr}"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65535"
+    cidr = "${var.additional_cf_sg_allow_1}"
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65535"
+    cidr = "${var.additional_cf_sg_allow_1}"
+  }
+
+}
+resource "openstack_networking_floatingip_v2" "docker_fp" {
+  region = "${var.region}"
+  pool = "${var.floating_ip_pool}"
+}
+
+output "docker_fp_address" {
+  value = "${openstack_networking_floatingip_v2.docker_fp.address}"
+}
+
+output "additional_cf_sg_allows" {
+  value = "${var.additional_cf_sg_allow_1},${var.additional_cf_sg_allow_2},${var.additional_cf_sg_allow_3},${var.additional_cf_sg_allow_4},${var.additional_cf_sg_allow_5},${openstack_networking_subnet_v2.docker_services_subnet.cidr},${openstack_networking_subnet_v2.cf_subnet.cidr},${openstack_networking_subnet_v2.lb_subnet.cidr},${openstack_networking_floatingip_v2.cf_fp.address},${var.hybrid_cdh_cidr}"
+}
+
+
+

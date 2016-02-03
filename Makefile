@@ -33,6 +33,20 @@ clean:
 	rm -f terraform.tfstate
 	rm -fR .terraform/
 	rm -fr platform-ansible
+	rm -f ./cf-install/cf_hybrid_override.tf ./cdh/cdh_hybrid_override.tf \
+	   ./cdh/consul/consul_hybrid_override.tf ./hybrid_override.tf
 
 provision:
 	pushd cf-install; export STATE_FILE="../terraform.tfstate"; make provision; popd
+
+hybrid:
+	cp ./cf-install/cf_hybrid_override.tf.hybrid ./cf-install/cf_hybrid_override.tf
+	cp ./cdh/cdh_hybrid_override.tf.hybrid ./cdh/cdh_hybrid_override.tf
+	cp ./cdh/consul/consul_hybrid_override.tf.hybrid ./cdh/consul/consul_hybrid_override.tf
+	cp ./hybrid_override.tf.hybrid ./hybrid_override.tf
+	sed -i 's/^exec/#exec/'  platform-ansible/bin/run_ansible.sh 
+	sed -i 's/\(worker\|master\)_size=[0-9]/\1_size=0/' terraform.tfvars
+
+route:
+	./bin/hybrid-route
+

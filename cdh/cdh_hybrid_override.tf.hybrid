@@ -1,0 +1,135 @@
+# Copyright (c) 2016 Intel Corporation
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+variable "hybrid_cdh_masters" {}
+variable "hybrid_cdh_workers" {}
+variable "hybrid_cdh_cidr" {}
+
+module "consul" {
+  floating_ip_pool = "${var.floating_ip_pool}"
+}
+
+resource "openstack_networking_floatingip_v2" "cdh-manager-fp" {
+  region = "${var.region}"
+  pool = "${var.floating_ip_pool}"
+}
+
+resource "openstack_compute_secgroup_v2" "cdh-sg" {
+  name = "CDH-${var.tenant_name}"
+  description = "CDH Security groups"
+  region = "${var.region}"
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "22"
+    to_port = "22"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65535"
+    self = true
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65535"
+    self = true
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65535"
+    from_group_id = "${var.cf_sg_id}"
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65535"
+    from_group_id = "${var.cf_sg_id}"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65355"
+    cidr = "${var.hybrid_cdh_cidr}"
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65355"
+    cidr = "${var.hybrid_cdh_cidr}"
+  }
+
+  rule {
+    ip_protocol = "icmp"
+    from_port = "-1"
+    to_port = "-1"
+    cidr = "${var.hybrid_cdh_cidr}"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "7180"
+    to_port = "7180"
+    cidr = "0.0.0.0/0"
+  }
+}
+
+resource "openstack_compute_instance_v2" "cdh-manager" {
+  floating_ip = "${openstack_networking_floatingip_v2.cdh-manager-fp.address}"
+}
+
+resource "openstack_compute_instance_v2" "cdh-launcher" {
+
+  connection {
+    user = "centos"
+    key_file = "${var.jumpbox_key_path}"
+    host = "${openstack_networking_floatingip_v2.cdh-launcher-fp.address}"
+  }
+
+  provisioner "file" {
+    source = "${var.cdh_key_path}"
+    destination = "/home/centos/.ssh/id_rsa"
+  }
+
+  provisioner "file" {
+    source = "${var.ansible_repo_path}"
+    destination = "/home/centos/ansible-cdh"
+  }
+
+  provisioner "file" {
+    source = "${path.module}/provision.sh"
+    destination = "/home/centos/provision.sh"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+        "chmod +x /home/centos/provision.sh",
+        "/home/centos/provision.sh ${openstack_compute_instance_v2.cdh-manager.access_ip_v4} ${var.hybrid_cdh_masters} ${var.hybrid_cdh_workers} ${module.consul.consul_masters_hybrid} ${var.nginx_ip} ${var.ntp_servers} ${var.cf_fp} ${var.http_proxy} ${var.https_proxy}"
+    ]
+  }
+}
+
+output "cdh_launcher_fp" {
+  value = "${openstack_networking_floatingip_v2.cdh-launcher-fp.address}"
+}

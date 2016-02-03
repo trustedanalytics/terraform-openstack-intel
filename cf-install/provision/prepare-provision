@@ -81,6 +81,7 @@ assure_string_in_file $filename_provision 'DOCKER_SERVICES_BOSHWORKSPACE_REPOSIT
 assure_string_in_file $filename_provision 'DOCKER_SERVICES_BOSHWORKSPACE_BRANCH=${36}' "DOCKER_SERVICES_BOSHWORKSPACE_BRANCH=\"$(terraform output -state="${state_file}" docker_services_boshworkspace_branch)\""
 assure_string_in_file $filename_provision 'LOGSEARCH_WORKSPACE_REPOSITORY=${37}' "LOGSEARCH_WORKSPACE_REPOSITORY=\"$(terraform output -state="${state_file}" logsearch_workspace_repository)\""
 assure_string_in_file $filename_provision 'LOGSEARCH_WORKSPACE_BRANCH=${38}' "LOGSEARCH_WORKSPACE_BRANCH=\"$(terraform output -state="${state_file}" logsearch_workspace_branch)\""
+assure_string_in_file $filename_provision 'DOCKER_IP_HYBRID=${39}' "DOCKER_IP_HYBRID=\"$(terraform output -state="${state_file}" docker_fp_address 2>/dev/null)\""
 
 for job in BACKBONE API SERVICES HEALTH RUNNER; do
 	for zone in Z1 Z2; do
