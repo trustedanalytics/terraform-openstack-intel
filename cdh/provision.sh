@@ -69,7 +69,7 @@ FILE="cdh"
 rm $FILE
 
 machineIPs+=($masterIP)
-masterIP=${5}
+masterIP=${nginxMaster}
 masterHost="nginx-master"
 echo "[nginx-master]" >> $FILE
 echo "${masterHost}${prefix} ansible_ssh_host=${masterIP}" >> $FILE
@@ -80,7 +80,7 @@ fi
 
 machineIPs+=($masterIP)
 
-managerIP=${1}
+managerIP=${cdhManager}
 managerHost="cdh-manager"
 echo "[cdh-manager]" >> $FILE
 echo "${managerHost}${prefix} ansible_ssh_host=${managerIP}" >> $FILE
