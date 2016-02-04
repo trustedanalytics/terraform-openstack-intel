@@ -93,45 +93,6 @@ resource "openstack_networking_floatingip_v2" "cdh-launcher-fp" {
   pool = "${var.floating_ip_pool}"
 }
 
-resource "openstack_blockstorage_volume_v1" "cdh-manager-vol" {
-  region = "RegionOne"
-  name = "cdh-manager-vol"
-  description = "cdh manager volume"
-  size = "${var.vol_size}"
-}
-
-resource "openstack_blockstorage_volume_v1" "cdh-master-vol-0" {
-  count = "${var.master_size}"
-  region = "RegionOne"
-  name = "cdh master ${count.index} vol-0"
-  description = "cdh master ${count.index} volume"
-  size = "${var.vol_size}"
-}
-
-resource "openstack_blockstorage_volume_v1" "cdh-master-vol-1" {
-  count = "${var.master_size}"
-  region = "RegionOne"
-  name = "cdh master ${count.index} vol-1"
-  description = "cdh master ${count.index} volume"
-  size = "${var.vol_size}"
-}
-
-resource "openstack_blockstorage_volume_v1" "cdh-worker-vol-0" {
-  count = "${var.worker_size}"
-  region = "RegionOne"
-  name = "cdh worker ${count.index} vol-0"
-  description = "cdh worker ${count.index} volume"
-  size = "${var.vol_size}"
-}
-
-resource "openstack_blockstorage_volume_v1" "cdh-worker-vol-1" {
-  count = "${var.worker_size}"
-  region = "RegionOne"
-  name = "cdh worker ${count.index} vol-1"
-  description = "cdh worker ${count.index} volume"
-  size = "${var.vol_size}"
-}
-
 resource "openstack_compute_keypair_v2" "jumpbox-keypair" {
   name = "cdh-jumpbox-keypair-${var.tenant_name}"
   public_key = "${file(var.jumpbox_public_key_path)}"
@@ -165,11 +126,6 @@ resource "openstack_compute_instance_v2" "cdh-manager" {
   security_groups = [ "${openstack_compute_secgroup_v2.cdh-sg.name}" ]
   config_drive = true
 
-  volume {
-    volume_id = "${openstack_blockstorage_volume_v1.cdh-manager-vol.id}"
-    device = "/dev/vdb"
-  }
-
   network {
     uuid = "${openstack_networking_network_v2.cdh-net.id}"
   }
@@ -186,17 +142,6 @@ resource "openstack_compute_instance_v2" "cdh-master" {
   security_groups = [ "${openstack_compute_secgroup_v2.cdh-sg.name}" ]
   config_drive = true
 
-  volume {
-    volume_id = "${element(openstack_blockstorage_volume_v1.cdh-master-vol-0.*.id, count.index)}"
-    device = "/dev/vdb"
-  }
-
-  volume {
-    volume_id = "${element(openstack_blockstorage_volume_v1.cdh-master-vol-1.*.id, count.index)}"
-    device = "/dev/vdc"
-  }
-
-
   network {
     uuid = "${openstack_networking_network_v2.cdh-net.id}"
   }
@@ -211,16 +156,6 @@ resource "openstack_compute_instance_v2" "cdh-worker" {
   key_pair = "${openstack_compute_keypair_v2.cdh-keypair.name}"
   security_groups = [ "${openstack_compute_secgroup_v2.cdh-sg.name}" ]
   config_drive = true
-
-  volume {
-    volume_id = "${element(openstack_blockstorage_volume_v1.cdh-worker-vol-0.*.id, count.index)}"
-    device = "/dev/vdb"
-  }
-
-  volume {
-    volume_id = "${element(openstack_blockstorage_volume_v1.cdh-worker-vol-1.*.id, count.index)}"
-    device = "/dev/vdc"
-  }
 
   network {
     uuid = "${openstack_networking_network_v2.cdh-net.id}"

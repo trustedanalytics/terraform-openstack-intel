@@ -40,9 +40,6 @@ variable "network" {
 variable "security_group" {
   default = "default"
 }
-variable "vol_size" {
-  default = 75
-}
 variable "master_size" {
   default = 3
 }
