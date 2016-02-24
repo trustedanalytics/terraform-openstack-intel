@@ -48,7 +48,7 @@ fi
 sudo sed -i -e 's@^mirrorlist@#mirrorlist@' /etc/yum.repos.d/epel*.repo
 sudo sed -i -e 's@^#baseurl.*/epel@baseurl=http://dl.fedoraproject.org/pub/epel@' /etc/yum.repos.d/epel*.repo
 sudo yum clean all
-sudo yum install ansible tmux vim -y
+sudo yum install ansible-1.9*.el6 tmux vim -y
 chmod 600 $HOME/.ssh/id_rsa
 
 pushd $HOME/ansible-cdh/platform-ansible
