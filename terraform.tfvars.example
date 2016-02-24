@@ -48,6 +48,11 @@ quay_pass = ""
 worker_size=3 # set worker size you want to have for cloudera
 master_size=3 # set master size you want to have for cloudera
 
+# Hybrid instalation settings, uncomment and change if needed
+#hybrid_cdh_masters="10.0.0.1,10.0.0.2,10.0.0.3"
+#hybrid_cdh_workers="10.0.0.4,10.0.0.5,10.0.0.6"
+#hybrid_cdh_cidr="10.0.0.0/24"
+
 # Control the cloudfoundry deployment size
 # Values are 'small', 'med', 'med-ha', and 'big-ha'
 # See https://github.com/cloudfoundry-community/terraform-aws-cf-install/blob/master/variables.tf for how

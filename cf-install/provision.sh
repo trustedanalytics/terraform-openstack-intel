@@ -67,6 +67,8 @@ DOCKER_SERVICES_BOSHWORKSPACE_BRANCH=${36}
 LOGSEARCH_WORKSPACE_REPOSITORY=${37}
 LOGSEARCH_WORKSPACE_BRANCH=${38}
 
+DOCKER_IP_HYBRID=${39}
+
 BACKBONE_Z1_COUNT=COUNT
 API_Z1_COUNT=COUNT
 SERVICES_Z1_COUNT=COUNT
@@ -444,6 +446,15 @@ if [[ $INSTALL_DOCKER == "true" ]]; then
       "${dockerDeploymentManifest}"
   fi
 
+  if [[ -n ${DOCKER_IP_HYBRID} ]]; then
+    /bin/sed -i \
+      -e "s|^- docker-jobs.yml|- docker-jobs-hybrid.yml|" \
+      -e "s|^- docker-openstack.yml|- docker-openstack-hybrid.yml|" \
+      "${dockerDeploymentManifest}"
+    /bin/sed -i \
+      -e "s|DOCKER_IP_HYBRID|${DOCKER_IP_HYBRID}|" \
+      /home/ubuntu/workspace/deployments/docker-services-boshworkspace/templates/docker-jobs-hybrid.yml
+  fi
   cd ~/workspace/deployments/docker-services-boshworkspace
   bundle install
   bosh deployment docker-openstack
