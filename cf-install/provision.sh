@@ -32,7 +32,8 @@ QUAY_PASS=${17}
 HTTP_PROXY=${18}
 HTTPS_PROXY=${19}
 
-OPENSTACK_IP=$(echo $OS_AUTH_URL | grep -E -o "([0-9]{1,3}[.]){3}[0-9]{1,3}")
+host_regexp="([a-zA-Z0-9\-]*[.]){1,}[a-zA-Z0-9\-]*";
+OPENSTACK_IP=$(echo $OS_AUTH_URL | sed -E "s#https?://($host_regexp).*#\1#")
 LB_WHITELIST="$(echo LB_WHITELIST_IPS | sed 's/ /,/g')"
 CF_WHITELIST="$(echo CF_WHITELIST_IPS | sed 's/ /,/g')"
 DK_WHITELIST="$(echo DK_WHITELIST_IPS | sed 's/ /,/g')"
