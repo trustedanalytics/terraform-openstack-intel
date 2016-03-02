@@ -185,7 +185,7 @@ pushd workspace/deployments
 
 # TODO: Use this stemcell in BOSH workspaces
 STEMCELL=~/bosh-stemcell-${STEMCELL_VERSION}-openstack-kvm-ubuntu-trusty-go_agent.tgz
-test -e ${STEMCELL} || wget -O ${STEMCELL} https://bosh.io/d/stemcells/bosh-openstack-kvm-ubuntu-trusty-go_agent?v=${STEMCELL_VERSION}
+test -e ${STEMCELL} || wget -nv -O ${STEMCELL} https://bosh.io/d/stemcells/bosh-openstack-kvm-ubuntu-trusty-go_agent?v=${STEMCELL_VERSION}
 
 pushd microbosh
 create_settings_yml() {
