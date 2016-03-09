@@ -436,7 +436,7 @@ if [[ $INSTALL_DOCKER == "true" ]]; then
     -e "s/DOCKER_SG/${CF_SG}/g" \
     -e "/8.8.8.8/d" \
     -e "/8.8.4.4/d" \
-    -e "s|\(dns_servers:\).*|\1 [${DNS1},${DNS2}]|" \
+    -e "s|\(dns_servers:\).*|\1 [${CONSUL_MASTERS}]|" \
     "${dockerDeploymentManifest}"
 
   if [[ -n ${HTTP_PROXY} || -n ${HTTPS_PROXY} ]]; then
