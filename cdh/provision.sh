@@ -24,14 +24,15 @@ echo "$*"
 cdhManager=$1
 cdhMasterArray=$2
 cdhWorkerArray=$3
-consulMasterArray=$4
-nginxMaster=$5
-ntpServers=$6
-cfFp=$7
+nginxMaster=$4
+ntpServers=$5
+cfFp=$6
+dns1=$7
+dns2=$8
 
 # These variables must be defined at the end
-httpProxy=$8
-httpsProxy=$9
+httpProxy=$9
+httpsProxy=${10}
 
 declare -a machineIPs
 
@@ -56,6 +57,8 @@ pushd $HOME/ansible-cdh/platform-ansible
 envName=$(awk '/env_name/ { print $2 }' defaults/env.yml)
 useCustomDns=$(awk '/use_custom_dns/ { print $2 }' defaults/env.yml)
 echo "openstack_addr: $cfFp" >> defaults/env.yml
+echo "openstack_dns1: $dns1" >> defaults/env.yml
+echo "openstack_dns2: $dns2" >> defaults/env.yml
 
 if [[ $useCustomDns == 'true' ]]; then
   prefix=".node.${envName}.consul"
@@ -128,24 +131,6 @@ done
 
 echo -e "[cdh-all-nodes:children]\ncdh-master\ncdh-worker" >> $FILE
 echo -e "[cdh-all:children]\ncdh-all-nodes\ncdh-manager" >> $FILE
-
-consulMasterList=($(echo ${consulMasterArray//,/ }))
-consulMasterCount=0
-
-echo '[consul-master]' >> $FILE
-for master in ${consulMasterList[@]}
-do
-  consulMasterIP=${master}
-  consulMasterHost="consul-master-${consulMasterCount}"
-  echo "${consulMasterHost}${prefix} ansible_ssh_host=${consulMasterIP}" >> $FILE
-
-  if [[ $useCustomDns == 'false' ]]; then
-    add_to_etc_hosts ${consulMasterIP} ${consulMasterHost}
-  fi
-
-  machineIPs+=($consulMasterIP)
-  consulMasterCount=$((consulMasterCount + 1))
-done
 
 popd
 

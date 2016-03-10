@@ -105,18 +105,6 @@ resource "openstack_compute_keypair_v2" "cdh-keypair" {
   region = "${var.region}"
 }
 
-module "consul" {
-  source = "./consul"
-
-  image_name = "${var.image_name}"
-  flavor_name = "${var.flavor_name}"
-  region = "${var.region}"
-
-  key_pair = "${openstack_compute_keypair_v2.cdh-keypair.name}"
-  security_group = "${openstack_compute_secgroup_v2.cdh-sg.name}"
-  net_id = "${openstack_networking_network_v2.cdh-net.id}"
-}          
-
 resource "openstack_compute_instance_v2" "cdh-manager" {
   name = "cdh-manager"
   image_name = "${var.image_name}"
@@ -202,7 +190,7 @@ resource "openstack_compute_instance_v2" "cdh-launcher" {
   provisioner "remote-exec" {
     inline = [
         "chmod +x /home/centos/provision.sh",
-        "/home/centos/provision.sh ${openstack_compute_instance_v2.cdh-manager.access_ip_v4} ${join(",", openstack_compute_instance_v2.cdh-master.*.access_ip_v4)} ${join(",", openstack_compute_instance_v2.cdh-worker.*.access_ip_v4)} ${module.consul.consul_masters} ${var.nginx_ip} ${var.ntp_servers} ${var.cf_fp} ${var.http_proxy} ${var.https_proxy}"
+        "/home/centos/provision.sh ${openstack_compute_instance_v2.cdh-manager.access_ip_v4} ${join(",", openstack_compute_instance_v2.cdh-master.*.access_ip_v4)} ${join(",", openstack_compute_instance_v2.cdh-worker.*.access_ip_v4)} ${var.nginx_ip} ${var.ntp_servers} ${var.cf_fp} ${var.dns1} ${var.dns2} ${var.http_proxy} ${var.https_proxy}"
     ]
   }
 }
@@ -212,5 +200,5 @@ output "cdh_cidr" {
 }
 
 output "consul_masters" {
-  value = "${module.consul.consul_masters}"
+  value = "${join(",", openstack_compute_instance_v2.cdh-master.*.access_ip_v4)}"
 }
