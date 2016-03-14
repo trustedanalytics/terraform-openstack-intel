@@ -17,10 +17,6 @@ variable "hybrid_cdh_masters" {}
 variable "hybrid_cdh_workers" {}
 variable "hybrid_cdh_cidr" {}
 
-module "consul" {
-  floating_ip_pool = "${var.floating_ip_pool}"
-}
-
 resource "openstack_networking_floatingip_v2" "cdh-manager-fp" {
   region = "${var.region}"
   pool = "${var.floating_ip_pool}"
@@ -125,7 +121,7 @@ resource "openstack_compute_instance_v2" "cdh-launcher" {
   provisioner "remote-exec" {
     inline = [
         "chmod +x /home/centos/provision.sh",
-        "/home/centos/provision.sh ${openstack_compute_instance_v2.cdh-manager.access_ip_v4} ${var.hybrid_cdh_masters} ${var.hybrid_cdh_workers} ${module.consul.consul_masters_hybrid} ${var.nginx_ip} ${var.ntp_servers} ${var.cf_fp} ${var.http_proxy} ${var.https_proxy}"
+        "/home/centos/provision.sh ${openstack_compute_instance_v2.cdh-manager.access_ip_v4} ${var.hybrid_cdh_masters} ${var.hybrid_cdh_workers} ${var.nginx_ip} ${var.ntp_servers} ${var.cf_fp} ${var.dns1} ${var.dns2} ${var.http_proxy} ${var.https_proxy}"
     ]
   }
 }
