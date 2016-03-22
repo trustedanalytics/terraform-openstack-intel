@@ -40,6 +40,7 @@ if [[ -n "${httpProxy}" && -n "${httpsProxy}" ]]; then
   echo "#!/bin/sh" | sudo tee /etc/profile.d/proxy.sh
   echo "export http_proxy=${httpProxy}" | sudo tee -a /etc/profile.d/proxy.sh
   echo "export https_proxy=${httpsProxy}" | sudo tee -a /etc/profile.d/proxy.sh
+  echo "export no_proxy=localhost,127.0.0.1,.consul" | sudo tee -a /etc/profile.d/proxy.sh
   sudo chmod +x /etc/profile.d/proxy.sh
   source /etc/profile.d/proxy.sh
 
@@ -140,12 +141,6 @@ fi
 
 for machineIP in ${machineIPs[@]}
 do
-  if [[ -n "${httpProxy}" && -n "${httpsProxy}" ]]; then
-    scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no /etc/profile.d/proxy.sh centos@${machineIP}:/home/centos/proxy.sh
-    scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no /etc/yum.conf centos@${machineIP}:/home/centos/yum.conf
-    ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/proxy.sh /etc/profile.d/proxy.sh
-    ssh -t -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no centos@${machineIP} sudo cp /home/centos/yum.conf /etc/yum.conf
-  fi
 
   if [[ $useCustomDns == 'false' ]]; then
     scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no hosts centos@${machineIP}:/home/centos/hosts
