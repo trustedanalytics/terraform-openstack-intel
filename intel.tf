@@ -28,8 +28,10 @@ module "cf-install" {
   tenant_id = "${var.tenant_id}"
   username = "${var.username}"
   password = "${var.password}"
-  public_key_path = "${var.jumpbox_public_key_path}"
-  key_path = "${var.jumpbox_key_path}"
+  jumpbox_public_key_path = "${var.jumpbox_public_key_path}"
+  jumpbox_key_path = "${var.jumpbox_key_path}"
+  cdh_public_key_path = "${var.cdh_public_key_path}"
+  cdh_key_path = "${var.cdh_key_path}"
   floating_ip_pool = "${var.floating_ip_pool}"
   region = "${var.region}"
   network_external_id = "${var.network_external_id}"
@@ -151,10 +153,6 @@ output "docker_subnet_cidr" {
 }
 output "install_docker_services" {
   value = "${module.cf-install.install_docker_services}"
-}
-
-output "key_path" {
-  value = "${module.cf-install.key_path}"
 }
 
 output "lb_subnet" {

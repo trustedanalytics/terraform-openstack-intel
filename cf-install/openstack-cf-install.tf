@@ -117,9 +117,15 @@ resource "openstack_networking_router_interface_v2" "int-ext-logsearch-interface
   subnet_id = "${openstack_networking_subnet_v2.logsearch_subnet.id}"
 }
 
-resource "openstack_compute_keypair_v2" "keypair" {
+resource "openstack_compute_keypair_v2" "jumpbox-keypair" {
   name = "bastion-keypair-${var.tenant_name}"
-  public_key = "${file(var.public_key_path)}"
+  public_key = "${file(var.jumpbox_public_key_path)}"
+  region = "${var.region}"
+}
+
+resource "openstack_compute_keypair_v2" "cdh-keypair"{
+  name = "cdh-keypair-${var.tenant_name}-nginx"
+  public_key = "${file(var.cdh_public_key_path)}"
   region = "${var.region}"
 }
 
@@ -253,7 +259,7 @@ resource "openstack_compute_instance_v2" "bastion" {
   image_name = "${var.image_name}"
   flavor_name = "${var.flavor_name}"
   region = "${var.region}"
-  key_pair = "${openstack_compute_keypair_v2.keypair.name}"
+  key_pair = "${openstack_compute_keypair_v2.jumpbox-keypair.name}"
   security_groups = [ "${openstack_compute_secgroup_v2.bastion.name}" ]
   floating_ip = "${openstack_networking_floatingip_v2.bastion_fp.address}"
 
@@ -268,7 +274,7 @@ resource "openstack_compute_instance_v2" "nginx-master" {
   image_name = "${var.centos_image_name}"
   flavor_name = "${var.flavor_name}"
   region = "${var.region}"
-  key_pair = "${openstack_compute_keypair_v2.keypair.name}"
+  key_pair = "${openstack_compute_keypair_v2.cdh-keypair.name}"
   security_groups = [ "${openstack_compute_secgroup_v2.cf.name}" ]
   floating_ip = "${openstack_networking_floatingip_v2.cf_fp.address}"
   config_drive = true
@@ -363,8 +369,12 @@ output "lb_subnet_cidr" {
   value = "${openstack_networking_subnet_v2.lb_subnet.cidr}"
 }
 
-output "key_path" {
-  value = "${var.key_path}"
+output "cdh_public_key_path" {
+  value = "${var.cdh_public_key_path}"
+}
+
+output "jumpbox_public_key_path" {
+  value = "${var.jumpbox_public_key_path}"
 }
 
 output "cf_release_version" {
