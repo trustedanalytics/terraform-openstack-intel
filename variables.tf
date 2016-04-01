@@ -71,7 +71,7 @@ variable "deployment_size" {
 }
 
 variable "cf_release_version" {
-  default = "207"
+  default = "212"
 }
 variable "ubuntu_image_name" {
   default = "ubuntu-14.04"
