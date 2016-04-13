@@ -465,6 +465,10 @@ if [[ $INSTALL_DOCKER == "true" ]]; then
   bosh -n deploy
   set -e
 
+  if [[ -n "$QUAY_USERNAME" ]]; then
+    patch -p1 <templates/quay.patch
+  fi
+
   DOCKER_IP=$(bosh vms 2>&1| awk '/docker\/0/ { print $8 }')
   #list all images, convert to JSON, get the container image and tag with JQ
   DOCKER_IMAGES=$(cat templates/docker-properties.yml | ruby -ryaml -rjson -e "print JSON.dump(YAML.load(ARGF))" |\
