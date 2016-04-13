@@ -228,12 +228,81 @@ resource "openstack_compute_secgroup_v2" "cf" {
 
 }
 
+resource "openstack_compute_secgroup_v2" "nginx" {
+  name = "nginx"
+  description = "Nginx Security groups"
+  region = "${var.region}"
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "80"
+    to_port = "80"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "443"
+    to_port = "443"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "32768"
+    to_port = "60000"
+    cidr = "0.0.0.0/0"
+  }
+  rule {
+    ip_protocol = "udp"
+    from_port = "32768"
+    to_port = "60000"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "icmp"
+    from_port = "-1"
+    to_port = "-1"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "icmp"
+    from_port = "-1"
+    to_port = "-1"
+    self = true
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65535"
+    cidr = "${var.cf_subnet}"
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65535"
+    cidr = "${var.cf_subnet}"
+  }
+
+}
+
 output "cf_sg" {
   value = "${openstack_compute_secgroup_v2.cf.name}"
 }
 
 output "cf_sg_id" {
   value = "${openstack_compute_secgroup_v2.cf.id}"
+}
+output "nginx_sg" {
+  value = "${openstack_compute_secgroup_v2.nginx.name}"
+}
+
+output "nginx_sg_id" {
+  value = "${openstack_compute_secgroup_v2.nginx.id}"
 }
 
 resource "openstack_networking_floatingip_v2" "cf_fp" {
@@ -269,7 +338,7 @@ resource "openstack_compute_instance_v2" "nginx-master" {
   flavor_name = "${var.flavor_name}"
   region = "${var.region}"
   key_pair = "${openstack_compute_keypair_v2.keypair.name}"
-  security_groups = [ "${openstack_compute_secgroup_v2.cf.name}" ]
+  security_groups = [ "${openstack_compute_secgroup_v2.nginx.name}" ]
   floating_ip = "${openstack_networking_floatingip_v2.cf_fp.address}"
   config_drive = true
 
