@@ -465,8 +465,9 @@ if [[ $INSTALL_DOCKER == "true" ]]; then
   bosh -n deploy
   set -e
 
-  if [[ -n "$QUAY_USERNAME" ]]; then
+  if [[ -n "$QUAY_USERNAME" ]] &&  [[ ! -f quay.patched ]]; then
     patch -p1 <templates/quay.patch
+    touch quay.patched
   fi
 
   DOCKER_IP=$(bosh vms 2>&1| awk '/docker\/0/ { print $8 }')
