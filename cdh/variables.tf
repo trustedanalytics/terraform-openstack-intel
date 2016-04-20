@@ -27,6 +27,7 @@ variable "cdh_public_key_path" {}
 variable "floating_ip_pool" {}
 variable "ansible_repo_path" {}
 variable "cf_sg_id" {}
+variable "nginx_sg_id" {}
 variable "router_id" {}
 
 variable "ntp_servers" {

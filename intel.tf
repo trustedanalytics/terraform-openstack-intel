@@ -89,6 +89,7 @@ module "cloudera" {
   worker_size="${var.worker_size}"
   master_size="${var.master_size}"
   cf_sg_id="${module.cf-install.cf_sg_id}"
+  nginx_sg_id="${module.cf-install.nginx_sg_id}"
   router_id="${module.cf-install.router_id}"
   cf_fp = "${module.cf-install.cf_fp_address}"
   image_name="${var.centos_image_name}"
