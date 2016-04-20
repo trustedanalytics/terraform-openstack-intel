@@ -3,8 +3,10 @@ variable "tenant_name" {}
 variable "tenant_id" {}
 variable "username" {}
 variable "password" {}
-variable "key_path" {}
-variable "public_key_path" {}
+variable "jumpbox_key_path" {}
+variable "jumpbox_public_key_path" {}
+variable "cdh_key_path" {}
+variable "cdh_public_key_path" {}
 variable "floating_ip_pool" {}
 variable "network_external_id" {}
 
