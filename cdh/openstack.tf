@@ -85,6 +85,19 @@ resource "openstack_compute_secgroup_v2" "cdh-sg" {
     to_port = "65535"
     from_group_id = "${var.cf_sg_id}"
   }
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65535"
+    from_group_id = "${var.nginx_sg_id}"
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65535"
+    from_group_id = "${var.nginx_sg_id}"
+  }
 
 }
 

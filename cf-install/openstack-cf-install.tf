@@ -117,9 +117,15 @@ resource "openstack_networking_router_interface_v2" "int-ext-logsearch-interface
   subnet_id = "${openstack_networking_subnet_v2.logsearch_subnet.id}"
 }
 
-resource "openstack_compute_keypair_v2" "keypair" {
+resource "openstack_compute_keypair_v2" "jumpbox-keypair" {
   name = "bastion-keypair-${var.tenant_name}"
-  public_key = "${file(var.public_key_path)}"
+  public_key = "${file(var.jumpbox_public_key_path)}"
+  region = "${var.region}"
+}
+
+resource "openstack_compute_keypair_v2" "cdh-keypair"{
+  name = "cdh-keypair-${var.tenant_name}-nginx"
+  public_key = "${file(var.cdh_public_key_path)}"
   region = "${var.region}"
 }
 
@@ -228,12 +234,99 @@ resource "openstack_compute_secgroup_v2" "cf" {
 
 }
 
+resource "openstack_compute_secgroup_v2" "nginx" {
+  name = "nginx"
+  description = "Nginx Security groups"
+  region = "${var.region}"
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "80"
+    to_port = "80"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "443"
+    to_port = "443"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "4443"
+    to_port = "4443"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "32768"
+    to_port = "60000"
+    cidr = "0.0.0.0/0"
+  }
+  rule {
+    ip_protocol = "udp"
+    from_port = "32768"
+    to_port = "60000"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "icmp"
+    from_port = "-1"
+    to_port = "-1"
+    cidr = "0.0.0.0/0"
+  }
+
+  rule {
+    ip_protocol = "icmp"
+    from_port = "-1"
+    to_port = "-1"
+    self = true
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65535"
+    self = true
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65535"
+    self = true
+  }
+
+  rule {
+    ip_protocol = "tcp"
+    from_port = "1"
+    to_port = "65535"
+    cidr = "192.168.0.0/16"
+  }
+
+  rule {
+    ip_protocol = "udp"
+    from_port = "1"
+    to_port = "65535"
+    cidr = "192.168.0.0/16"
+  }
+
+}
+
 output "cf_sg" {
   value = "${openstack_compute_secgroup_v2.cf.name}"
 }
 
 output "cf_sg_id" {
   value = "${openstack_compute_secgroup_v2.cf.id}"
+}
+
+output "nginx_sg_id" {
+  value = "${openstack_compute_secgroup_v2.nginx.id}"
 }
 
 resource "openstack_networking_floatingip_v2" "cf_fp" {
@@ -253,7 +346,7 @@ resource "openstack_compute_instance_v2" "bastion" {
   image_name = "${var.image_name}"
   flavor_name = "${var.flavor_name}"
   region = "${var.region}"
-  key_pair = "${openstack_compute_keypair_v2.keypair.name}"
+  key_pair = "${openstack_compute_keypair_v2.jumpbox-keypair.name}"
   security_groups = [ "${openstack_compute_secgroup_v2.bastion.name}" ]
   floating_ip = "${openstack_networking_floatingip_v2.bastion_fp.address}"
 
@@ -268,8 +361,8 @@ resource "openstack_compute_instance_v2" "nginx-master" {
   image_name = "${var.centos_image_name}"
   flavor_name = "${var.flavor_name}"
   region = "${var.region}"
-  key_pair = "${openstack_compute_keypair_v2.keypair.name}"
-  security_groups = [ "${openstack_compute_secgroup_v2.cf.name}" ]
+  key_pair = "${openstack_compute_keypair_v2.cdh-keypair.name}"
+  security_groups = [ "${openstack_compute_secgroup_v2.nginx.name}" ]
   floating_ip = "${openstack_networking_floatingip_v2.cf_fp.address}"
   config_drive = true
 
@@ -363,8 +456,12 @@ output "lb_subnet_cidr" {
   value = "${openstack_networking_subnet_v2.lb_subnet.cidr}"
 }
 
-output "key_path" {
-  value = "${var.key_path}"
+output "cdh_public_key_path" {
+  value = "${var.cdh_public_key_path}"
+}
+
+output "jumpbox_public_key_path" {
+  value = "${var.jumpbox_public_key_path}"
 }
 
 output "cf_release_version" {
@@ -454,5 +551,5 @@ output "logsearch_workspace_branch" {
 }
 
 output "nginx_ip" {
-  value = "${openstack_compute_instance_v2.nginx-master.access_ip_v4}"
+  value = "${openstack_compute_instance_v2.nginx-master.network.0.fixed_ip_v4}"
 }
