@@ -5,7 +5,7 @@
 state_file="${STATE_FILE:-./terraform.tfstate}"
 
 #You need the sed nonsense if the path to your key has a ~ in it
-keyPath=$(terraform output -state="${state_file}" key_path | sed -e "s#^~#$HOME#")
+keyPath=$(terraform output -state="${state_file}" jumpbox_public_key_path | sed -e "s#^~#$HOME#")
 scriptPath="provision/provision.sh"
 gpgKeyPath="provision/rvm.gpg"
 targetPath="/home/ubuntu/provision.sh"
