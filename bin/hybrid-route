@@ -16,7 +16,7 @@
 state_file=terraform.tfstate
 
 dockerFpAddress=$(terraform output -state="${state_file}" docker_fp_address)
-keyPath=$(terraform output -state="${state_file}" key_path | sed -e "s#^~#$HOME#")
+keyPath=$(terraform output -state="${state_file}" jumpbox_public_key_path | sed -e "s#^~#$HOME#")
 cdhLauncherIP=$(terraform output -state="${state_file}" cdh_launcher_fp)
 ansibleDir="ansible-cdh/platform-ansible"
 ansibleEnv="$ansibleDir/defaults/env.yml"

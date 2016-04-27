@@ -282,3 +282,7 @@ output "quay_username" {
 output "quay_pass" {
   value = "${var.quay_pass}"
 }
+
+output "jumpbox_public_key_path" {
+  value = "${var.jumpbox_key_path}"
+}
